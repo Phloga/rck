@@ -1,0 +1,37 @@
+package de.vee.rck.user;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import de.vee.rck.recipe.Recipe;
+
+import java.util.Collection;
+
+@Entity @Setter @Getter @AllArgsConstructor @NoArgsConstructor
+public class AppUser {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(nullable = false, unique = true)
+    private String userName;
+    private String email;
+    private String passwordSalt;
+    private String password;
+    private boolean enabled;
+    private boolean tokenExpired;
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+    private Collection<UserRole> roles;
+
+    @ManyToMany(mappedBy = "permittedUsers")
+    private Collection<Recipe> recipes;
+}
