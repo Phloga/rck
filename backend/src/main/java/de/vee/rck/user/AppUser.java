@@ -7,9 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import de.vee.rck.recipe.Recipe;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
-@Entity @Setter @Getter @AllArgsConstructor @NoArgsConstructor
+@Entity @Setter @Getter @AllArgsConstructor
 public class AppUser {
 
     @Id
@@ -34,4 +35,11 @@ public class AppUser {
 
     @ManyToMany(mappedBy = "permittedUsers")
     private Collection<Recipe> recipes;
+
+    public AppUser(){
+        this.enabled = false;
+        this.tokenExpired = true;
+        this.roles = new ArrayList<UserRole>();
+        this.recipes = new ArrayList<Recipe>();
+    }
 }

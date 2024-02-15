@@ -1,7 +1,7 @@
 package de.vee.rck.user;
 
-public class RoleNotFoundError extends RuntimeException {
-    public RoleNotFoundError(String message){
+public class UserRoleNotFoundError extends RuntimeException {
+    public UserRoleNotFoundError(String message){
         super(message);
     }
 }

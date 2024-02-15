@@ -32,7 +32,8 @@ public class SecurityConfig {
 
         http
                 .securityMatcher("/*")
-                .csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()))
+                // /h2-console/** is not controlled by spring, which makes the security matcher
+                //.csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()))
                 //.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 //        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
                 .authorizeHttpRequests((authorize) -> authorize
@@ -69,6 +70,10 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().requestMatchers("/h2-console/**");
+    }
 
     @Bean
     public PasswordEncoder encoder() {
