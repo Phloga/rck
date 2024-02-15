@@ -17,6 +17,8 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import static org.springframework.security.config.Customizer.withDefaults;
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+
 
 @Configuration
 @EnableWebSecurity
@@ -30,6 +32,7 @@ public class SecurityConfig {
 
         http
                 .securityMatcher("/*")
+                .csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()))
                 //.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 //        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
                 .authorizeHttpRequests((authorize) -> authorize
@@ -43,7 +46,7 @@ public class SecurityConfig {
     public SecurityFilterChain csrfDisabledFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .securityMatcher("/api/**", "/assets/**","/img/**","/style/**","/h2-console/**")
+                .securityMatcher("/api/**", "/assets/**")   // paths are relative to the context path (default "/")
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest().permitAll()
@@ -58,7 +61,6 @@ public class SecurityConfig {
         http
                 //.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 //        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
-                .csrf(csrf -> withDefaults())
                 .securityMatcher("/**")
                 .authorizeHttpRequests(
                         (authorize) -> authorize.anyRequest().authenticated()
