@@ -36,17 +36,19 @@ public class UserService {
         }
     }
 
-    @Transactional
     AppUser registerNewUser(AppUser user) throws UserRegistrationRequestError {
+        return registerNewUser(user, false);
+    }
+    @Transactional
+    AppUser registerNewUser(AppUser user, boolean allowDuplicateEmail) throws UserRegistrationRequestError {
         boolean nameAvailable = false;
         boolean emailAvailable = false;
         nameAvailable = userRepo.findByUserName(user.getUserName()) == null;
-        emailAvailable = userRepo.findByEmail(user.getEmail()) == null;
+        emailAvailable = allowDuplicateEmail || userRepo.findByEmail(user.getEmail()) == null;
 
         if (!(nameAvailable && emailAvailable)){
             throw new UserRegistrationRequestError(!nameAvailable, !emailAvailable);
         }
-        //TODO add email confirmation
         return userRepo.save(user);
     }
 }

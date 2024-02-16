@@ -16,6 +16,8 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import java.security.SecureRandom;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
@@ -24,7 +26,7 @@ import static org.springframework.boot.autoconfigure.security.servlet.PathReques
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-
+    static final int bcryptStrength = 10;
 
     @Bean
     @Order(1)
@@ -77,6 +79,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
+        //Bcrypt generates and includes password salts into the hash, that's the reason for the constructor taking a random number generator
+        return new BCryptPasswordEncoder(bcryptStrength, new SecureRandom());
     }
 }

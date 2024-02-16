@@ -19,7 +19,6 @@ public class AppUser {
     @Column(nullable = false, unique = true)
     private String userName;
     private String email;
-    private String passwordSalt;
     private String password;
     private boolean enabled;
     private boolean tokenExpired;

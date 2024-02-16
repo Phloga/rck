@@ -4,12 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public class UserRegistrationRequestError extends Throwable{
+public class UserRegistrationRequestError extends Throwable {
 
-    private final boolean emailTaken;
     private final boolean nameTaken;
-    UserRegistrationRequestError(boolean emailTaken, boolean nameTaken){
-        this.emailTaken = emailTaken;
+    private final boolean emailTaken;
+
+    UserRegistrationRequestError(boolean nameTaken, boolean emailTaken){
         this.nameTaken = nameTaken;
+        this.emailTaken = emailTaken;
     }
 }

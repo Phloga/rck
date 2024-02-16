@@ -16,7 +16,6 @@ public interface UserMapper {
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "recipes", ignore = true),
             @Mapping(target = "password", ignore = true),
-            @Mapping(target = "passwordSalt", ignore = true),
             @Mapping(target = "enabled", ignore = true),
             @Mapping(target = "roles", ignore = true),
             @Mapping(target = "tokenExpired", ignore = true)
