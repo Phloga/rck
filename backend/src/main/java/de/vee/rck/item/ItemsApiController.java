@@ -2,22 +2,20 @@ package de.vee.rck.item;
 
 import de.vee.rck.item.dto.ItemDetails;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import javax.swing.text.html.Option;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+/** Controlls the "/api/item/**" and "/api/items/**" end points*/
 @RestController
 @AllArgsConstructor
-public class ItemRestController {
+public class ItemsApiController {
 
     ItemMapper itemMapper;
     ItemRepository itemRepo;
@@ -36,4 +34,29 @@ public class ItemRestController {
         Collection<Item> ingredients = itemRepo.findByIsBaseIngredient(true);
         return itemMapper.itemToItemDetails(ingredients);
     }
+
+
+    @PreAuthorize("hasAuthority('MODIFY_ITEM')")
+    @PostMapping(path="/api/items/modify")
+    public void changeItem(@RequestBody List<ItemDetails> itemDetails){
+        itemRepo.saveAll(itemMapper.itemDetailsToItem(itemDetails));
+    }
+
+    @PreAuthorize("hasAuthority('REMOVE_ITEM')")
+    @DeleteMapping(path="/api/item/{id}")
+    public void removeItem(@PathVariable Long id){
+        itemRepo.findById(id).ifPresent((item) -> {
+            itemRepo.delete(item);
+        });
+    }
+
+    @GetMapping(path="/api/item/{id}", produces="application/json")
+    ItemDetails sendItemDetails(@PathVariable Long id) {
+        var item = itemRepo.findById(id);
+        if (item.isPresent()){
+            return itemMapper.itemToItemDetails(item.get());
+        }
+        return new ItemDetails();
+    }
+
 }

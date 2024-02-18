@@ -31,7 +31,6 @@ public class SecurityConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain csrfEnabledFilterChain(HttpSecurity http) throws Exception {
-
         http
                 .securityMatcher("/*")
                 // /h2-console/** is not controlled by spring, which makes the security matcher
@@ -41,7 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest()
                         .permitAll())
-                .formLogin(Customizer.withDefaults()).httpBasic(withDefaults());
+                .formLogin(Customizer.withDefaults());
         return http.build();
     }
     @Bean

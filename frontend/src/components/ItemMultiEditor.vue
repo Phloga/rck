@@ -41,8 +41,8 @@ function itemAdd(item) {
 }
 
 function saveChanges(){
-    const postItemChangesUri = "/item/modifyAll"
-    const csrf_token = document.querySelector('meta[name="_csrf"]').content
+    const postItemChangesUri = "/api/items/modify"
+    //const csrf_token = document.querySelector('meta[name="_csrf"]').content
     
     //const changesSubmission = Array.from(modifiedItems, ([key, value]) =>  value )
     //TODO add newly created item to changesSubmission
@@ -51,7 +51,7 @@ function saveChanges(){
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "X-CSRF-TOKEN": csrf_token
+            //"X-CSRF-TOKEN": csrf_token
         },
         body: JSON.stringify(modifiedItems), // body data type must match "Content-Type" header
     })

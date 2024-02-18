@@ -1,16 +1,19 @@
 package de.vee.rck.recipe;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Optional;
 
 @Controller
 public class RecipeEditorController {
 
     @GetMapping("/editRecipe")
-    String openRecipeEditor(@RequestParam Long recipeId){
-        if (recipeId != null) {
+    String openRecipeEditor(@RequestParam Optional<Long> recipeId, Model model){
+        if (recipeId.isPresent()) {
             //TODO open existing recipe
             int x = 0;
         } else {
