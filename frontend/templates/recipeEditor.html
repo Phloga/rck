@@ -6,12 +6,19 @@
     <title>Rezept Bearbeiten</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width" intitial-scale="1.0"/>
-    
+    <link rel="stylesheet" href="/assets/main.css">
 </head>
 
-<main>
-    <div id="app" v-cloak></div>
-    <div id="editorjs"></div>
-</main>
+<body>
+    <h1><span class="block">Rezepte Editor</span></h1>
+    <main>
+        <div id="app" v-cloak></div>
+        <hr class="divider">
+        <h2><span class="block">Beschreibung</span></h2>
+        <div class="section-container">
+            <div class="editor" id="editorjs"></div>
+        </div>
+    </main>
+</body>
 
 <script type="module" src="/src/page/recipeEditor.js"></script>

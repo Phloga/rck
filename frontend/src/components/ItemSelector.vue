@@ -1,8 +1,24 @@
 <script setup>
 
-import {computed} from "vue"
+import {computed, ref} from "vue"
 
-const props = defineProps(["itemMap","searchString"]) // maps int -> object
+//const props = defineProps(["itemMap","searchString"]) // maps int -> object
+
+
+const props = defineProps({
+  itemMap: {
+    type: Map,
+    required: true
+  },
+  searchString : {
+    type: String,
+    default: ""
+  },
+  enableCreateNew : {
+    type: Boolean,
+    default: false
+  }
+})
 
 const emit = defineEmits(['itemSelected'])
 
@@ -16,18 +32,38 @@ const filtereditems = computed(() => {
     return newFilteredIngredients 
 })
 
+const createNewVisible = computed(() => {
+    return props.enableCreateNew && filtereditems.value.length === 0
+})
+
+const newItem = ref(makeItem())
+
+function makeItem(){
+    return {
+        name: "",
+        isBaseIngredient: false
+    }
+}
+
+function createNewItem(){
+    select(newItem.value)
+    newItem.value = makeItem();
+}
+
 function select(item){
     emit('itemSelected', item)
 }
+
 </script>
 
 
 <template>
-    <div>
-        <div>
-            <button v-for="item in filtereditems" :key="item.id"  @click="select(item)" class="item-selection-button">
-            {{item.name}}
-            </button>
-        </div>
+    <button v-for="item in filtereditems" :key="item.id"  @click="select(item)" class="round-button item">
+        {{item.name}}
+    </button>
+    <div v-show="createNewVisible">
+        <p>Fall die gesuchte Zutat in der Datenbank nicht vorhanden ist können diese über dieses Feld hier hinzufügen</p>
+        <input v-model="newItem.name" class="round-button item" placeholder="Name">
+        <button @click="createNewItem" class="round-button control">Hinzufügen</button>
     </div>
 </template>

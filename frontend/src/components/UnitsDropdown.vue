@@ -1,5 +1,5 @@
 <script setup>
-import {ref, computed, defineProps, defineEmits, onMounted} from 'vue'
+import {ref, computed} from 'vue'
 
 const props = defineProps(["unitList","modelValue"])
 const emit = defineEmits(["update:modelValue"])
@@ -44,10 +44,10 @@ function selectItem(index){
 <template>
     <div ref="dropdownRoot" @focusin="openDropdown">
         <input type="text" :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)" placeholder="Einheit">
-        <div v-show="isOpen">
-            <a href="#" v-for="unit,i in filteredUnitList" :key="i" @click="selectItem(i)">
-                <div>{{ unit.name }} [{{ unit.symbol }}]</div>
-            </a>
+        <div v-show="isOpen" class="dropdown">
+            <button v-for="unit,i in filteredUnitList" :key="i" @click="selectItem(i)">
+                {{ unit.name }} [{{ unit.symbol }}]
+            </button>
         </div> 
     </div>
 </template>

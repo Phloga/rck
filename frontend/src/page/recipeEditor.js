@@ -13,6 +13,7 @@ import List from "@editorjs/list"
 import Warning from "@editorjs/warning"
 import Table from "@editorjs/table"
 
+
 var editor = new EditorJS({
     /**
      * Enable/Disable the read only mode
@@ -23,7 +24,7 @@ var editor = new EditorJS({
      * Wrapper of Editor
      */
     holder: 'editorjs',
-
+    minHeight: 600,
     /**
      * Common Inline Toolbar settings
      * - if true (or not specified), the order from 'tool' property will be used
@@ -39,6 +40,12 @@ var editor = new EditorJS({
       /**
        * Each Tool is a Plugin. Pass them via 'class' option with necessary settings {@link docs/tools.md}
        */
+      paragraph: {
+        config : {
+        placeholder : "Text Hinzufügen",
+        preserveBlank : false
+        }
+      },
       header: {
         class: Header,
         inlineToolbar: ['marker', 'link'],
@@ -74,8 +81,11 @@ var editor = new EditorJS({
     }
   });
 
-document.addEventListener("saveRecipe", function(event) {
+document.addEventListener("saveRecipe", async function(event) {
   //TODO save
+  var editorData = await editor.save();
+  //TODO build RecipeDetails object
+
 })
 
 
