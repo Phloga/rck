@@ -30,6 +30,10 @@ public class Recipe implements Serializable {
      *  ,This property should help in avoiding some queries on the item_listing table */
     private Integer ingredientCount;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    private AppUser owner;
+
     @ManyToMany
     @JoinTable(
             name = "recipes_users",

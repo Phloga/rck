@@ -44,6 +44,14 @@ public class ItemListing implements Serializable {
         id.setIsOutput(flag);
     }
 
+    public boolean isOutput() {
+        return id.getIsOutput();
+    }
+
+    public boolean isInput() {
+        return !id.getIsOutput();
+    }
+
     public ItemListing(Item item, Recipe recipe, Boolean isOutput){
         id = new ItemListingKey(recipe.getId(),item.getId(),isOutput);
         this.item = item;

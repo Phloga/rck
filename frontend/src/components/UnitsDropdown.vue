@@ -43,7 +43,7 @@ function selectItem(index){
 
 <template>
     <div ref="dropdownRoot" @focusin="openDropdown">
-        <input type="text" :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)" placeholder="Einheit">
+        <input type="text" :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)" placeholder="Einheit" class="borderless-field">
         <div v-show="isOpen" class="dropdown">
             <button v-for="unit,i in filteredUnitList" :key="i" @click="selectItem(i)">
                 {{ unit.name }} [{{ unit.symbol }}]

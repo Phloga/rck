@@ -1,27 +1,25 @@
 package de.vee.rck.recipe.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.ArrayList;
 import java.util.Collection;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-public class RecipeDetails {
-    private String name;
-    private String content;
+public interface RecipeDetails {
+    String getName();
+    void setName(String name);
 
-    private Collection<ItemListingDetails> ingredients;
-    private Collection<ItemListingDetails> products;
-    public RecipeDetails(String title) {
-        this.name = name;
-        this.content = "";
-        this.ingredients = new ArrayList<ItemListingDetails>();
-        this.products = new ArrayList<ItemListingDetails>();
+    String getContent();
+    void setContent(String content);
+
+    Collection<ItemListingDetails> getIngredients();
+    void setIngredients(Collection<ItemListingDetails> listings);
+
+    Collection<ItemListingDetails> getProducts();
+    void setProducts(Collection<ItemListingDetails> listings);
+
+    default void copyFrom(RecipeDetails details){
+        this.setIngredients(details.getIngredients());
+        this.setProducts(details.getProducts());
+        this.setContent(details.getContent());
+        this.setName(details.getName());
     }
+
 }

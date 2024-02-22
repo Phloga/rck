@@ -58,12 +58,12 @@ function select(item){
 
 
 <template>
-    <button v-for="item in filtereditems" :key="item.id"  @click="select(item)" class="round-button item">
+    <button v-for="item in filtereditems" :key="item.id"  @click="select(item)" class="round-corners item">
         {{item.name}}
     </button>
     <div v-show="createNewVisible">
         <p>Fall die gesuchte Zutat in der Datenbank nicht vorhanden ist können diese über dieses Feld hier hinzufügen</p>
-        <input v-model="newItem.name" class="round-button item" placeholder="Name">
-        <button @click="createNewItem" class="round-button control">Hinzufügen</button>
+        <input v-model="newItem.name" class="round-corners item" placeholder="Name">
+        <button @click="createNewItem" class="round-corners control">Hinzufügen</button>
     </div>
 </template>

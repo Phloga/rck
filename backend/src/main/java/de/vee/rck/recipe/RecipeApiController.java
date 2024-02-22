@@ -1,6 +1,7 @@
 package de.vee.rck.recipe;
 
 import de.vee.rck.recipe.dto.RecipeQuery;
+import de.vee.rck.recipe.dto.RecipeQueryResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,12 @@ public class RecipeApiController {
             consumes="application/json",
             produces="application/json")
     public List<IngredientMatchingResult> findRecipesByIngredients(@RequestBody RecipeQuery query){
-        var recipeList = recipeRepo.findRecipesByIngredientIds(query.getItemIds());
-        return recipeList;
+        return recipeRepo.findRecipesByIngredientIds(query.getItemIds());
+    }
+
+    @GetMapping(path="/data/{id}",produces="application/json")
+    RecipeQueryResponse sendRecipe(@PathVariable("id") Long recipeId){
+        var recipe = recipeRepo.findById(recipeId).orElseThrow();
+        return new RecipeQueryResponse(recipeMapper.toPackedRecipe(recipe), recipe.getOwner().getUserName());
     }
 }

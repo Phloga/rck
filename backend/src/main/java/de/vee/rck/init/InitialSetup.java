@@ -7,7 +7,7 @@ import de.vee.rck.item.ItemMapper;
 import de.vee.rck.item.ItemRepository;
 import de.vee.rck.recipe.RecipeRepository;
 import de.vee.rck.item.dto.ItemDetails;
-import de.vee.rck.recipe.dto.RecipeDetails;
+import de.vee.rck.recipe.dto.PackedRecipe;
 import de.vee.rck.recipe.RecipeMapper;
 import de.vee.rck.units.Unit;
 import de.vee.rck.units.UnitMapper;
@@ -162,10 +162,11 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
             var items = itemMapper.itemDetailsToItem(initialIngredients);
             itemRepo.saveAll(items);
 
-            List<RecipeDetails> initialRecipes = mapper.readValue(recipesJsonText,
-                    mapper.getTypeFactory().constructCollectionType(List.class, RecipeDetails.class));
+            List<PackedRecipe> initialRecipes = mapper.readValue(recipesJsonText,
+                    mapper.getTypeFactory().constructCollectionType(List.class, PackedRecipe.class));
 
-            for (RecipeDetails details : initialRecipes){
+
+            for (PackedRecipe details : initialRecipes){
                 var recipe = recipeMapper.toRecipe(details);
                 recipeRepo.save(recipe);
             }

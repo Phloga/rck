@@ -81,7 +81,7 @@ public class RecipeMapper {
     }
 
     @Transactional
-    public Recipe toRecipe(RecipeDetails details){
+    public Recipe toRecipe(PackedRecipe details){
         Recipe recipe = new Recipe();
 
         // copy simple attributes over
@@ -120,5 +120,21 @@ public class RecipeMapper {
         recipe.getItemLines().addAll(productListings);
         recipe.getItemLines().addAll(ingredientListings);
         return recipe;
+    }
+
+    public ItemListingDetails toItemListingDetails(ItemListing listing){
+        return new ItemListingDetails(
+                listing.getId().getItemId(),
+                listing.getItem().getName(),
+                listing.getIsOptional(),
+                listing.getUnit().getName(),
+                listing.getAmount()
+        );
+    }
+
+    public PackedRecipe toPackedRecipe(Recipe recipe){
+        var products = recipe.getItemLines().stream().filter(ItemListing::isOutput).map(this::toItemListingDetails).toList();
+        var ingredients = recipe.getItemLines().stream().filter(ItemListing::isInput).map(this::toItemListingDetails).toList();
+        return new PackedRecipe(recipe.getName(), recipe.getContent(),ingredients, products);
     }
 }

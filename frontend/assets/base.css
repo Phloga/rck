@@ -1,0 +1,84 @@
+/* color palette from <https://github.com/vuejs/theme> */
+:root {
+  --color-dark-text:  hsl(201, 90%, 8%);
+  --color-light-text: hsl(45, 88%, 94%);
+
+
+
+
+
+}
+
+/* semantic color variables for this project */
+:root {
+  --color-background: hsl(204, 100%, 84%);
+  --color-background2: hsl(30, 100%, 82%);
+  --color-button: hsl(335, 21%, 17%);
+  --color-button-text: hsl(55, 71%, 86%);
+  --color-text: hsl(45, 88%, 94%);
+  --color-border: hsl(248, 26%, 45%);
+  --color-border-hover: hsl(248, 25%, 23%);
+  --color-heading: var(--vt-c-text-dark-1);
+  --section-gap: 160px;
+
+  --color-background-editor: hsl(38, 55%, 91%);
+  --color-editor: hsl(225, 32%, 15%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: hsl(265, 89%, 11%);
+    --color-background2: hsl(265, 89%, 4%);
+    --color-background-item: hsl(245, 56%, 92%);
+
+    --color-button: var(--color-background-item);
+    --color-button-hover: hsl(248, 45%, 83%);
+    
+    --color-background-critical: hsl(0, 81%, 64%);
+    --color-background-control: hsl(185, 87%, 88%);
+    --color-button-text: var(--color-dark-text);
+    --color-text: var(--color-light-text);
+    --color-content-box: hsl(266, 84%, 7%);
+    --color-border: hsl(248, 20%, 16%);
+    --color-border-hover: hsl(248, 45%, 83%);
+    --color-input-background: hsl(196, 100%, 95%);
+    --color-input-text: var(--color-dark-text);
+    --color-heading: var(--vt-c-text-dark-1);
+    --color-divider: hsl(205, 75%, 97%);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition:
+    color 0.5s,
+    background-color 0.5s;
+  line-height: 1.6;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
