@@ -30,8 +30,32 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: "../backend/src/main/resources/frontend",
+    //outDir: "../backend/src/main/resources/frontend",
     emptyOutDir: true,
+    /*
+    lib : {
+            // Could also be a dictionary or array of multiple entry points
+            entry: resolve(__dirname, 'src/page/recipeEditor.js'),
+            name: 'recipeEditor',
+            // the proper extensions will be added
+            fileName: 'recipeEditor',
+            formats: ["umd"]
+    },
+    
+    rollupOptions: {
+      // make sure to externalize deps that shouldn't be bundled
+      // into your library
+      
+      external: ['vue'],
+      output: {
+        // Provide global variables to use in the UMD build
+        // for externalized deps
+        globals: {
+          vue: 'Vue',
+        },
+      },
+    },*/
+    
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'templates/index.html'),

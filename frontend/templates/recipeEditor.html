@@ -12,12 +12,7 @@
 <body>
     <h1><span class="block">Rezepte Editor</span></h1>
     <main>
-        <div id="app" v-cloak></div>
-        <hr class="divider">
-        <h2><span class="block">Beschreibung</span></h2>
-        <div class="section-container">
-            <div class="editor" id="editorjs"></div>
-        </div>
+        <div id="app" v-cloak th:default-value='${recipe}'></div>
     </main>
 </body>
 
