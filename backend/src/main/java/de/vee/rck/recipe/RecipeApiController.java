@@ -23,6 +23,7 @@ public class RecipeApiController {
         return recipeRepo.findRecipesByIngredientIds(query.getItemIds());
     }
 
+
     @GetMapping(path="/data/{id}",produces="application/json")
     RecipeQueryResponse sendRecipe(@PathVariable("id") Long recipeId){
         var recipe = recipeRepo.findById(recipeId).orElseThrow();

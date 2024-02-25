@@ -1,7 +1,7 @@
 package de.vee.rck.user;
 
 import de.vee.rck.user.AppUser;
-import de.vee.rck.user.dto.UserDetails;
+import de.vee.rck.user.dto.AppUserDetails;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,8 +20,8 @@ public interface UserMapper {
             @Mapping(target = "roles", ignore = true),
             @Mapping(target = "tokenExpired", ignore = true)
     })
-    AppUser userDetailsToAppUser(UserDetails details);
+    AppUser userDetailsToAppUser(AppUserDetails details);
 
     @InheritInverseConfiguration
-    UserDetails appUserToUserDetails(AppUser user);
+    AppUserDetails appUserToUserDetails(AppUser user);
 }

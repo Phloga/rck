@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDetails implements UserCard {
+public class AppUserDetails implements UserCard {
     private String userName;
     private String email;
 }

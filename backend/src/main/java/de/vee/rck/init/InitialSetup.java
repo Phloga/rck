@@ -167,7 +167,7 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
 
 
             for (PackedRecipe details : initialRecipes){
-                var recipe = recipeMapper.toRecipe(details);
+                var recipe = recipeMapper.toRecipe(details, null);
                 recipeRepo.save(recipe);
             }
             /*

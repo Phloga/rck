@@ -41,95 +41,20 @@ const validateAmount = yup.number().min(0)
 const validateTitle = yup.string().required();
 
 var editor
+const submitTarget = ref("/newRecipe")
 
-function loadRecipe(recipeObj){
-  //Fix this
-  recipeName.value = recipeObj.name;
-  ingredients.value = recipeObj.ingredients;
-  products.value = recipeObj.products;
-
-}
-
-function addIngredient(item){
-  //TODO make this look more like listing dtos
-  //TODO store removed items elsewhere
-  ingredients.value.push({
-    itemName: item.name,
-    itemId: item.id,
-    isOptional: false,
-    unit: "",
-    amount: 0.0
-  })
-  remainingItems.value.delete(item.id)
-}
-
-function removeIngredient(index){
-  let element = ingredients.value[index]
-  ingredients.value.splice(index,1)
-  if (element.itemId == null){
-    return
-  }
-  const item = availableItems.value.get(element.itemId)
-  remainingItems.value.set(element.itemId, item)
-}
-
-
-async function saveRecipe(){
-  //build a RecipeDetails object
-  var editorData = await editor.save();
-  const recipeData = {
-    name: recipeName,
-    content: editorData,
-    ingredients: ingredients.value,
-    products: [{itemName: recipeName, isBaseIngredient : false, isOptional : false, unit:"none", amount:1.0}],
+function setupEditor(recipeObj){
+  if (recipeObj != null){
+    recipeName.value = recipeObj.name;
+    ingredients.value = recipeObj.ingredients;
+    products.value = recipeObj.products;
   }
 
-  //TODO send it to the server
-
-  //let event = new CustomEvent("saveRecipe", { bubbles: true, detail: recipeData });
-  //document.dispatchEvent(event);
-}
-
-
-onMounted(() => {
-  fetch(itemListUri)
-  .then(response => response.json())
-  .then(data => { 
-    availableItems.value = new Map(data.map(rsp => [rsp.id, rsp]))
-    remainingItems.value = new Map(availableItems.value)
-  })
-  .catch(error => console.error('Unable to get items.', error)); //TODO replace this with an error message for the user 
-
-  fetch(unitListUri)
-  .then(response => response.json())
-  .then(data => { 
-    availableUnits.value = data})
-  .catch(error => console.error('Unable to get unit list.', error)); //TODO replace this with an error message for the user 
-
-  fetch(currentUserUri)
-  .then(response => response.json())
-  .then(data => { 
-    currentUserCard.value = data})
-  .catch(error => console.error('Unable to get user information.', error)); //TODO replace this with an error message for the user 
-  
-  /*
-  let defaultValues = JSON.parse(document.getElementById("app").getAttribute("data-init")); //attrs doesn't work
-  if (defaultValues != null){
-    loadRecipe(defaultValues)
-  }*/
-
-  //setup wysiwyg editor
   editor = new EditorJS({
-    /**
-     * Enable/Disable the read only mode
-     */
     readOnly: false,
-
-    /**
-     * Wrapper of Editor
-     */
     holder: 'editorjs',
     minHeight: 600,
+    data : recipeObj.content.length > 0 ? JSON.parse(recipeObj.content) : {},
     /**
      * Common Inline Toolbar settings
      * - if true (or not specified), the order from 'tool' property will be used
@@ -137,14 +62,7 @@ onMounted(() => {
      */
     // inlineToolbar: ['link', 'marker', 'bold', 'italic'],
     // inlineToolbar: true,
-
-    /**
-     * Tools list
-     */
     tools: {
-      /**
-       * Each Tool is a Plugin. Pass them via 'class' option with necessary settings {@link docs/tools.md}
-       */
       paragraph: {
         config : {
         placeholder : "Text Hinzufügen",
@@ -171,12 +89,7 @@ onMounted(() => {
         inlineToolbar: true,
         shortcut: 'CMD+ALT+T'
       },
-
     },
-
-    /**
-     * This Tool will be used as default
-     */
     // defaultBlock: 'paragraph'
     onReady: function(){
       //saveButton.click();
@@ -185,15 +98,82 @@ onMounted(() => {
       //console.log('something changed', event);
     }
   });
-/*
-  document.addEventListener("saveRecipe", async function(event) {
-    //TODO save
-    var editorData = await editor.save();
-    //TODO build RecipeDetails object
-    const recipe = event.detail;
-    recipe.content = editorData    
+
+}
+
+function addIngredient(item){
+  ingredients.value.push({
+    itemName: item.name,
+    itemId: item.id,
+    isOptional: false,
+    unit: "",
+    amount: 0.0
   })
-  */  
+  remainingItems.value.delete(item.id)
+}
+
+function removeIngredient(index){
+  let element = ingredients.value[index]
+  ingredients.value.splice(index,1)
+  if (element.itemId == null){
+    return
+  }
+  const item = availableItems.value.get(element.itemId)
+  remainingItems.value.set(element.itemId, item)
+}
+
+
+async function saveRecipe(){
+  //build a RecipeDetails object
+  var editorData = await editor.save();
+  const recipeData = {
+    name: recipeName.value,
+    content:   JSON.stringify(editorData),
+    ingredients: ingredients.value,
+    products: [{itemName: recipeName.value, isBaseIngredient : false, isOptional : false, unit:"none", amount:1.0}],
+  }
+
+  const response = await fetch(submitTarget.value, {
+    method : "POST",
+    headers : {"Content-Type" : "application/json"},
+    body: JSON.stringify(recipeData)
+  })
+  if (!response.ok){
+    //TODO show some error
+  }
+  //let event = new CustomEvent("saveRecipe", { bubbles: true, detail: recipeData });
+  //document.dispatchEvent(event);
+}
+
+
+onMounted(() => {
+  fetch(itemListUri)
+  .then(response => response.json())
+  .then(data => { 
+    availableItems.value = new Map(data.map(rsp => [rsp.id, rsp]))
+    remainingItems.value = new Map(availableItems.value)
+  })
+  .catch(error => console.error('Unable to get items.', error)); //TODO replace this with an error message for the user 
+
+  fetch(unitListUri)
+  .then(response => response.json())
+  .then(data => { 
+    availableUnits.value = data})
+  .catch(error => console.error('Unable to get unit list.', error)); //TODO replace this with an error message for the user 
+
+  fetch(currentUserUri)
+  .then(response => response.json())
+  .then(data => { 
+    currentUserCard.value = data})
+  .catch(error => console.error('Unable to get user information.', error)); //TODO replace this with an error message for the user 
+  
+  
+  let defaultValues = JSON.parse(document.getElementById("app").getAttribute("data-init")); //attrs doesn't work
+  let recipeId = document.getElementById("app").getAttribute("data-recipe-id")
+  if (defaultValues != null && recipeId != null){
+    submitTarget.value = "/recipe/" + recipeId
+  }
+  setupEditor(defaultValues)
 })
 
 

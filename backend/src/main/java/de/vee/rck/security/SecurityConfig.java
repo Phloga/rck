@@ -30,40 +30,40 @@ public class SecurityConfig {
 
     @Bean
     @Order(1)
-    public SecurityFilterChain csrfEnabledFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain unauthorizedSecureFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/login")   // paths are relative to the context path (default "/")
+                .authorizeHttpRequests((authorize) -> authorize
+                        .anyRequest().permitAll()
+                ).formLogin(Customizer.withDefaults());
+        return http.build();
+    }
+    @Bean
+    @Order(2)
+    public SecurityFilterChain unauthorizedFilterChain(HttpSecurity http) throws Exception {
         http
                 .securityMatcher("/*")
                 // /h2-console/** is not controlled by spring, which makes the security matcher
                 //.csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()))
-                //.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                //.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 //        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest()
                         .permitAll())
                 .formLogin(Customizer.withDefaults());
         return http.build();
     }
-    @Bean
-    @Order(2)
-    public SecurityFilterChain csrfDisabledFilterChain(HttpSecurity http) throws Exception {
-
-        http
-                .securityMatcher("/api/**", "/assets/**")   // paths are relative to the context path (default "/")
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests((authorize) -> authorize
-                        .anyRequest().permitAll()
-                );
-        return http.build();
-    }
-
 
     @Bean
     @Order(3)
-    public SecurityFilterChain secureFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain defaultAuthorizedFilterChain(HttpSecurity http) throws Exception {
         http
                 //.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 //        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
                 .securityMatcher("/**")
+                .csrf( csrf -> csrf.disable())
+                //.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 .authorizeHttpRequests(
                         (authorize) -> authorize.anyRequest().authenticated()
                 )

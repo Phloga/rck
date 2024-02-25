@@ -1,7 +1,6 @@
 package de.vee.rck.user;
 
 import de.vee.rck.user.dto.UserCard;
-import de.vee.rck.user.dto.UserDetails;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,11 +20,12 @@ public class UserInformationController {
     @ResponseBody
     @GetMapping("/api/user/currentUser")
     public UserCard sendUserInformation(Authentication authentication, HttpServletResponse response){
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof UserDetails details){
+        var user = userRepo.findByUserName( authentication.getName());
+        if (user.isPresent()){
             response.setHeader("Cache-Control", "private");
-            return userMapper.appUserToUserDetails(userRepo.findByUserName(details.getUserName()));
+            return userMapper.appUserToUserDetails(user.get());
         }
+        response.setStatus(403);
         return null;
     }
 }

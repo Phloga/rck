@@ -64,6 +64,6 @@ function select(item){
     <div v-show="createNewVisible">
         <p>Fall die gesuchte Zutat in der Datenbank nicht vorhanden ist können diese über dieses Feld hier hinzufügen</p>
         <input v-model="newItem.name" class="round-corners item" placeholder="Name">
-        <button @click="createNewItem" class="round-corners control">Hinzufügen</button>
+        <button type="button" @click="createNewItem" class="round-corners control">Hinzufügen</button>
     </div>
 </template>

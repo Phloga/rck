@@ -26,7 +26,7 @@ public class RecipeMapper {
     private ItemMapper itemMapper;
 
     // create a new itemListing based on provided detail
-    public static ItemListing createItemListing(ItemListingDetails details, boolean isOutput, Item item, Recipe recipe, Unit unit) {
+    public static ItemListing makeItemListingFrom(ItemListingDetails details, boolean isOutput, Item item, Recipe recipe, Unit unit) {
         ItemListing listing = new ItemListing(item,recipe,isOutput);
         listing.setIsOptional(details.getIsOptional());
         listing.setAmount(details.getAmount());
@@ -34,9 +34,8 @@ public class RecipeMapper {
         return listing;
     }
 
-
     /** @param createItems : when true create item objects for listings with itemId set to null*/
-    protected static ItemListing createItemListing(
+    protected ItemListing createItemListing(
             ItemListingDetails details, Recipe recipe, boolean isOutput, Map<Long, Item> id2item, Map<String, Unit> name2unit, boolean createItems) {
         Unit unit = name2unit.get(details.getUnit());
         if (unit == null) {
@@ -46,15 +45,15 @@ public class RecipeMapper {
 
         if (details.getItemId() == null){
             if (createItems){
-                var item = new Item(details.getItemName(), false);
-                return createItemListing(
+                var item = itemRepo.save(new Item(details.getItemName(), false));
+                return makeItemListingFrom(
                         details, isOutput, item , recipe, name2unit.get(details.getUnit()));
             } else {
                 throw new RecipeMappingFailure(MessageFormat.format(
                         "Unknown item {0} in ingredient list",details.getItemName()));
             }
         } else {
-            return createItemListing(
+            return makeItemListingFrom(
                     details, isOutput, id2item.get(details.getItemId()) , recipe, name2unit.get(details.getUnit()));
         }
     }
@@ -80,13 +79,30 @@ public class RecipeMapper {
         );
     }
 
+    /**
+     * calls toRecipe(details, false, true)
+     * @param details
+     * @return
+     */
+    public Recipe toRecipe(RecipeDetails details, Long recipeId) {
+        return toRecipe(details, recipeId, false, true);
+    }
+
+    /**
+     *
+     * @param details details object to map, mapper can change the ItemListingDetails objects within
+     * @param unknownInputsFlag if set, create entities for unknown items in ingredients list
+     * @param unknownOutputsFlag if set, create entities for unknown items in products list
+     * @return
+     */
     @Transactional
-    public Recipe toRecipe(PackedRecipe details){
+    public Recipe toRecipe(RecipeDetails details, Long recipeId, boolean unknownInputsFlag, boolean unknownOutputsFlag){
         Recipe recipe = new Recipe();
 
         // copy simple attributes over
         recipe.setName(details.getName());
         recipe.setContent(details.getContent());
+        recipe.setId(recipeId);
 
         // find listings without id and add missing ids
         var allListings = Stream.concat(details.getIngredients().stream(), details.getProducts().stream()).toList();
@@ -105,11 +121,14 @@ public class RecipeMapper {
 
         // link items
         List<ItemListing> ingredientListings = details.getIngredients().stream().map((detailsListing)-> {
-            return RecipeMapper.createItemListing(detailsListing, recipe, false, id2item,name2unit, false);
+            return createItemListing(
+                    detailsListing, recipe, false, id2item,name2unit, unknownInputsFlag);
         }).toList();
+
         // link and create missing items
         List<ItemListing> productListings = details.getProducts().stream().map((detailsListing)-> {
-            return RecipeMapper.createItemListing(detailsListing, recipe, true,id2item,name2unit,true);
+            return createItemListing(
+                    detailsListing, recipe, true,id2item,name2unit, unknownOutputsFlag);
         }).toList();
 
         recipe.setIngredientCount(

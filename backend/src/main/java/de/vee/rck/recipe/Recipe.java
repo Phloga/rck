@@ -20,6 +20,7 @@ public class Recipe implements Serializable {
     private Long id;
 
     private String name;
+    @Column(name="content", columnDefinition="TEXT")
     private String content;
 
     /** ingredients and produced products of the recipe */
