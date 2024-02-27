@@ -6,6 +6,9 @@ import de.vee.rck.recipe.dto.PackedRecipe;
 import de.vee.rck.recipe.dto.RecipeDetails;
 import de.vee.rck.units.dto.UnitDetails;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -14,27 +17,31 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.net.URI;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
+@RequestMapping("/recipe")
 public class RecipeEditorController {
 
     private RecipeService recipeService;
+
+    private static final String recipeUriPrefix = "/recipe/d";
 
     @GetMapping("/newRecipe")
     String openRecipeEditor(Model model){
         return "recipeEditor";
     }
-    @GetMapping("/recipe/{id}")
+    @GetMapping("/d/{id}")
     String openRecipe(@PathVariable("id") Long recipeId){
         //TODO open details view with given recipe
         return "recipeView";
     }
 
-    @GetMapping("/recipe/{id}/edit")
+    @GetMapping("/d/{id}/edit")
     ModelAndView editRecipe(@PathVariable("id") Long recipeId) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ModelMap modelMap = new ModelMap();
@@ -51,19 +58,22 @@ public class RecipeEditorController {
      */
     @PreAuthorize("hasAuthority('MODIFY_RECIPE')")
     @PostMapping("/newRecipe")
-    String createRecipe(@RequestBody PackedRecipe recipe, Authentication authentication) {
+    ResponseEntity<String> createRecipe(@RequestBody PackedRecipe recipe, Authentication authentication) {
         Recipe recipeEntity = recipeService.updateRecipe(recipe, null, authentication.getName(), false);
-        return MessageFormat.format("redirect:/recipe/{0}/edit", recipeEntity.getId());
+        //respond with 201, put link to resource in Location header
+        URI location = URI.create(MessageFormat.format("/recipe/d/{0}/edit", recipeEntity.getId()));
+        return ResponseEntity.created(location).build();
     }
 
 
     @PreAuthorize("hasAuthority('MODIFY_RECIPE')")
-    @PostMapping("/recipe/{id}")
-    String saveRecipe(@PathVariable("id") Long recipeId, @RequestBody PackedRecipe recipe,
+    @PostMapping("/d/{id}")
+    void saveRecipe(@PathVariable("id") Long recipeId, @RequestBody PackedRecipe recipe,
                     Authentication authentication)
     {
         boolean skipChecks = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
         recipeService.updateRecipe(recipe, recipeId, authentication.getName(), skipChecks);
-        return MessageFormat.format("redirect:/recipe/{0}/edit", recipeId);
+        //URI location = URI.create(MessageFormat.format("/recipe/d/{0}/edit", recipeId));
+        //return ResponseEntity.ok();
     }
 }

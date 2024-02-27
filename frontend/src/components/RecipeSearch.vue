@@ -2,10 +2,12 @@
 //import RecipeSearchResults from "./RecipeSearchResults.vue"
 import ItemSelector from "./ItemSelector.vue"
 import RecipeSearchResults from "./RecipeSearchResults.vue"
+import NavBar from "./NavBar.vue";
 import { ref, onMounted } from "vue";
 
 const initialIngredientsUri = "/api/items/commonIngredients";
 const recipesFindByIngredientsUri = "/api/recipes/findByIngredients"
+const currentUserUri = "/api/user/self"
 
 const itemListUri = ref(initialIngredientsUri)
 
@@ -14,6 +16,8 @@ const selectedItems = ref(new Map())
 
 const searchString =  ref("")
 const queryResults = ref([])
+
+const userCard = ref({userName:"", roles:[]});
 
 function itemAdd(item) {
     selectedItems.value.set(item.id,item)
@@ -56,15 +60,28 @@ onMounted(() => {
         availableItems.value = new Map(data.map(rsp => [rsp.id, rsp]))
     })
     .catch(error => console.error('Unable to get items.', error)); //TODO replace this with an error message for the user 
+
+    fetch(currentUserUri)
+    .then(response => response.json())
+    .then(data => {
+        userCard.value = data
+    })
+    .catch(error => console.error('Unable to get user Information.', error)) //TODO replace this with an error message for the user
 })
 
 </script>
 
 <template>
-    <input type='text' v-model="searchString">
-    <ItemSelector :itemMap="availableItems" :searchString="searchString" @itemSelected="itemAdd"></ItemSelector>
-    <br>
-    <ItemSelector v-bind:itemMap="selectedItems" searchString="" @itemSelected="itemRemove"></ItemSelector>
-    <button @click="search">Suche</button>
-    <RecipeSearchResults :results="queryResults"></RecipeSearchResults>
+    <NavBar :userCard="userCard"></NavBar>
+    <header>
+        <h1>Reverse Chefkoch</h1>
+    </header>
+    <main>
+        <input type='text' v-model="searchString">
+        <ItemSelector :itemMap="availableItems" :searchString="searchString" @itemSelected="itemAdd"></ItemSelector>
+        <br>
+        <ItemSelector v-bind:itemMap="selectedItems" searchString="" @itemSelected="itemRemove"></ItemSelector>
+        <button @click="search">Suche</button>
+        <RecipeSearchResults :results="queryResults"></RecipeSearchResults>
+    </main>
 </template>

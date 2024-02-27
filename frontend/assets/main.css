@@ -1,5 +1,17 @@
 @import './base.css';
 
+.right-aligned {
+  text-align: right;
+}
+
+.nav-list {
+  padding-top: 10px;
+}
+
+.nav-list > * {
+  padding: 0.3rem 0.3rem 0.3rem 0.3rem;
+}
+
 .item-selector-search {
   min-width: 40ch;
   padding: 0.33rem 0rem 0.33rem 0rem;

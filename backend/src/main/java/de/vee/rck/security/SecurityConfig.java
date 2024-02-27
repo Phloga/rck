@@ -3,6 +3,8 @@ package de.vee.rck.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
@@ -42,8 +45,8 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain unauthorizedFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/*")
-                // /h2-console/** is not controlled by spring, which makes the security matcher
+                .securityMatcher("/*", "/api/**")
+                // /h2-console/** is not controlled by spring
                 //.csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()))
                 //.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
                 //        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler()))
@@ -73,7 +76,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/h2-console/**");
+        return (web) -> web.ignoring().requestMatchers("/h2-console/**", "/assets/**");
     }
 
     @Bean
@@ -81,4 +84,22 @@ public class SecurityConfig {
         //Bcrypt generates and includes password salts into the hash, that's the reason for the constructor taking a random number generator
         return new BCryptPasswordEncoder(bcryptStrength, new SecureRandom());
     }
+
+    /*
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String hierarchy = "ROLE_ADMIN > ROLE_USER \n ROLE_USER > ROLE_ANONYMOUS";
+        roleHierarchy.setHierarchy(hierarchy);
+        return roleHierarchy;
+    }
+
+    @Bean
+    public DefaultWebSecurityExpressionHandler customWebSecurityExpressionHandler() {
+        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy());
+        return expressionHandler;
+    }
+    */
+
 }

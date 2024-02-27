@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collection;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,4 +14,5 @@ import lombok.Setter;
 public class AppUserDetails implements UserCard {
     private String userName;
     private String email;
+    private Collection<String> roles;
 }

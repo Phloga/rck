@@ -1,6 +1,7 @@
 <script setup>
 import ItemSelector from "./ItemSelector.vue"
 import UnitsDropdown from "./UnitsDropdown.vue"
+import NavBar from "./NavBar.vue"
 
 import {Form,Field, ErrorMessage} from "vee-validate"
 
@@ -19,7 +20,7 @@ import Table from "@editorjs/table"
 //const itemListUri = "/api/items/allItems";
 const itemListUri = "/api/items/commonIngredients";
 const unitListUri = "/api/units/getAll"
-const currentUserUri = "/api/user/currentUser"
+const currentUserUri = "/api/user/self"
 
 
 const attrs = useAttrs()
@@ -34,14 +35,14 @@ const ingredients = ref(new Array())
 const products = ref(new Array())
 
 
-const currentUserCard = ref({userName: ""})
+const currentUserCard = ref({userName: "", roles: []})
 
 const validateAmount = yup.number().min(0)
 
 const validateTitle = yup.string().required();
 
 var editor
-const submitTarget = ref("/newRecipe")
+const submitTarget = ref("/recipe/newRecipe")
 
 function setupEditor(recipeObj){
   if (recipeObj != null){
@@ -54,7 +55,7 @@ function setupEditor(recipeObj){
     readOnly: false,
     holder: 'editorjs',
     minHeight: 600,
-    data : recipeObj.content.length > 0 ? JSON.parse(recipeObj.content) : {},
+    ...(recipeObj != null && recipeObj.content.length > 0) && {data: JSON.parse(recipeObj.content)},
     /**
      * Common Inline Toolbar settings
      * - if true (or not specified), the order from 'tool' property will be used
@@ -138,11 +139,11 @@ async function saveRecipe(){
     headers : {"Content-Type" : "application/json"},
     body: JSON.stringify(recipeData)
   })
-  if (!response.ok){
-    //TODO show some error
+  if (response.status == 201){
+    window.location.href = response.headers.get("Location");
+  } else if (!response.ok) {
+    //todo display error
   }
-  //let event = new CustomEvent("saveRecipe", { bubbles: true, detail: recipeData });
-  //document.dispatchEvent(event);
 }
 
 
@@ -171,7 +172,7 @@ onMounted(() => {
   let defaultValues = JSON.parse(document.getElementById("app").getAttribute("data-init")); //attrs doesn't work
   let recipeId = document.getElementById("app").getAttribute("data-recipe-id")
   if (defaultValues != null && recipeId != null){
-    submitTarget.value = "/recipe/" + recipeId
+    submitTarget.value = "/recipe/d/" + recipeId
   }
   setupEditor(defaultValues)
 })
@@ -180,6 +181,9 @@ onMounted(() => {
 </script>
 
 <template>
+    <NavBar :userCard="currentUserCard"></NavBar>
+    <h1><span class="block">Rezepte Editor</span></h1>
+    <main>
     <Form @submit="saveRecipe">
       <br>
       <div class="block">
@@ -221,4 +225,5 @@ onMounted(() => {
     <div class="section-container">
         <div class="editor" id="editorjs"></div>
     </div>
+    </main>
 </template>

@@ -93,11 +93,11 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
         Privilege modifyRecipePrivilege
                 = createPrivilegeIfNotFound("MODIFY_RECIPE");
 
-        List<Privilege> adminPrivileges = Arrays.asList(listAll,
-                modifyItemPrivilege, removeItemPrivilege, addRecipePrivilege, modifyRecipePrivilege);
-        createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        createRoleIfNotFound("ROLE_USER", Arrays.asList(addRecipePrivilege));
-        //createRoleIfNotFound("ROLE_ANONYMOUS", Arrays.asList(readPrivilege));
+        createRoleIfNotFound("ROLE_ADMIN", Arrays.asList(
+                listAll, modifyItemPrivilege, removeItemPrivilege, addRecipePrivilege, modifyRecipePrivilege));
+        createRoleIfNotFound("ROLE_USER", Arrays.asList(
+                addRecipePrivilege, modifyRecipePrivilege, listAll));
+        createRoleIfNotFound("ROLE_ANONYMOUS", List.of());
 
         if (userRepository.count() == 0) {
             UserRole adminRole = roleRepository.findByName("ROLE_ADMIN");
