@@ -10,7 +10,9 @@
 </head>
 
 <body>
-    <div id="app" v-cloak th:data-init='${recipe}' th:data-recipe-id='${recipeId}'></div>
+    <main>
+        <div id="app" v-cloak th:data-init='${recipe}'></div>
+    </main>
 </body>
 
-<script type="module" src="/src/page/recipeEditor.js"></script>
+<script type="module" src="/src/page/recipeView.js"></script>

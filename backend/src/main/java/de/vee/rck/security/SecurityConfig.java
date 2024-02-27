@@ -45,7 +45,7 @@ public class SecurityConfig {
     @Order(2)
     public SecurityFilterChain unauthorizedFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/*", "/api/**")
+                .securityMatcher("/*", "/api/**", "/recipe/d/*")
                 // /h2-console/** is not controlled by spring
                 //.csrf(csrf -> csrf.ignoringRequestMatchers(toH2Console()))
                 //.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))

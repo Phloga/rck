@@ -36,9 +36,13 @@ public class RecipeEditorController {
         return "recipeEditor";
     }
     @GetMapping("/d/{id}")
-    String openRecipe(@PathVariable("id") Long recipeId){
-        //TODO open details view with given recipe
-        return "recipeView";
+    ModelAndView openRecipe(@PathVariable("id") Long recipeId) throws JsonProcessingException {
+        ObjectMapper jsonMapper = new ObjectMapper();
+        ModelMap modelMap = new ModelMap();
+        String jsonText = jsonMapper.writeValueAsString(recipeService.findAndPackRecipe(recipeId));
+        modelMap.addAttribute("recipe", jsonText);
+        modelMap.addAttribute("recipeId", recipeId);
+        return new ModelAndView("recipeView", modelMap);
     }
 
     @GetMapping("/d/{id}/edit")
