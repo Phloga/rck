@@ -1,15 +1,15 @@
 package de.vee.rck.recipe;
 
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
 import de.vee.rck.item.Item;
-import de.vee.rck.item.ItemMapper;
 import de.vee.rck.item.ItemRepository;
 import de.vee.rck.item.ItemIdentifiers;
 import de.vee.rck.recipe.dto.*;
 import de.vee.rck.units.Unit;
 import de.vee.rck.units.UnitRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.util.*;
@@ -17,25 +17,32 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+/**
+ * Map Recipe related Entity and DTO objects with the help of item and unit repository
+ */
 @Component
 @AllArgsConstructor
 public class RecipeMapper {
 
     private ItemRepository itemRepo;
     private UnitRepository unitRepo;
-    private ItemMapper itemMapper;
 
-    // create a new itemListing based on provided detail
-    public static ItemListing makeItemListingFrom(ItemListingDetails details, boolean isOutput, Item item, Recipe recipe, Unit unit) {
-        ItemListing listing = new ItemListing(item,recipe,isOutput);
+    protected static RecipeLine makeItemListing(ItemListingDetails details, boolean isOutput, Item item, Recipe recipe, Unit unit) {
+        RecipeLine listing = new RecipeLine(item,recipe,isOutput);
         listing.setIsOptional(details.getIsOptional());
         listing.setAmount(details.getAmount());
         listing.setUnit(unit);
         return listing;
     }
 
+    protected static Stream<ItemListingDetails> findListingWithMissingIds(Stream<ItemListingDetails> listingDetails){
+        return listingDetails.filter(
+                (listing) -> {return listing.getItemId() == null;}
+        );
+    }
+
     /** @param createItems : when true create item objects for listings with itemId set to null*/
-    protected ItemListing createItemListing(
+    protected RecipeLine createItemListing(
             ItemListingDetails details, Recipe recipe, boolean isOutput, Map<Long, Item> id2item, Map<String, Unit> name2unit, boolean createItems) {
         Unit unit = name2unit.get(details.getUnit());
         if (unit == null) {
@@ -46,14 +53,14 @@ public class RecipeMapper {
         if (details.getItemId() == null){
             if (createItems){
                 var item = itemRepo.save(new Item(details.getItemName(), false));
-                return makeItemListingFrom(
+                return makeItemListing(
                         details, isOutput, item , recipe, name2unit.get(details.getUnit()));
             } else {
                 throw new RecipeMappingFailure(MessageFormat.format(
                         "Unknown item {0} in ingredient list",details.getItemName()));
             }
         } else {
-            return makeItemListingFrom(
+            return makeItemListing(
                     details, isOutput, id2item.get(details.getItemId()) , recipe, name2unit.get(details.getUnit()));
         }
     }
@@ -62,7 +69,6 @@ public class RecipeMapper {
      *  This method finds ids with the help of ItemRepository
      * */
     protected void updateItemIds(Collection<ItemListingDetails> listings){
-        // make a translation table for adding missing ids to details
         Collection<ItemIdentifiers> itemIdentifiers = itemRepo.findItemIdentifiersByNameIn(
                 listings.stream().map(
                         ItemListingDetails::getItemName).collect(Collectors.toList()));
@@ -72,11 +78,6 @@ public class RecipeMapper {
         for (var listing : listings){
             listing.setItemId(itemName2Id.get(listing.getItemName()));
         }
-    }
-    protected static Stream<ItemListingDetails> findListingWithMissingIds(Stream<ItemListingDetails> listingDetails){
-        return listingDetails.filter(
-                (listing) -> {return listing.getItemId() == null;}
-        );
     }
 
     /**
@@ -120,13 +121,13 @@ public class RecipeMapper {
                 Unit::getName, (unit) -> {return unit;}));
 
         // link items
-        List<ItemListing> ingredientListings = details.getIngredients().stream().map((detailsListing)-> {
+        List<RecipeLine> ingredientListings = details.getIngredients().stream().map((detailsListing)-> {
             return createItemListing(
                     detailsListing, recipe, false, id2item,name2unit, unknownInputsFlag);
         }).toList();
 
         // link and create missing items
-        List<ItemListing> productListings = details.getProducts().stream().map((detailsListing)-> {
+        List<RecipeLine> productListings = details.getProducts().stream().map((detailsListing)-> {
             return createItemListing(
                     detailsListing, recipe, true,id2item,name2unit, unknownOutputsFlag);
         }).toList();
@@ -141,7 +142,7 @@ public class RecipeMapper {
         return recipe;
     }
 
-    public ItemListingDetails toItemListingDetails(ItemListing listing){
+    public ItemListingDetails toItemListingDetails(RecipeLine listing){
         return new ItemListingDetails(
                 listing.getId().getItemId(),
                 listing.getItem().getName(),
@@ -152,8 +153,8 @@ public class RecipeMapper {
     }
 
     public PackedRecipe toPackedRecipe(Recipe recipe){
-        var products = recipe.getItemLines().stream().filter(ItemListing::isOutput).map(this::toItemListingDetails).toList();
-        var ingredients = recipe.getItemLines().stream().filter(ItemListing::isInput).map(this::toItemListingDetails).toList();
+        var products = recipe.getItemLines().stream().filter(RecipeLine::isOutput).map(this::toItemListingDetails).toList();
+        var ingredients = recipe.getItemLines().stream().filter(RecipeLine::isInput).map(this::toItemListingDetails).toList();
         return new PackedRecipe(recipe.getName(), recipe.getContent(),ingredients, products);
     }
 }

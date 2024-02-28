@@ -1,12 +1,10 @@
 package de.vee.rck.item;
-import de.vee.rck.recipe.ItemListing;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Getter;
 import java.io.Serializable;
-import java.util.Collection;
 
 @Getter
 @Setter

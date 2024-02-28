@@ -41,7 +41,7 @@ public class RecipeRepoTest {
     }
     @Test
     @WithMockUser(value = "admin")
-    void findRecipesRequestChain(){
+    void findRecipes_testRequestChain(){
         var ingredients = itemRepo.findByIsBaseIngredient(true);
         assertFalse(ingredients.isEmpty());
         assertTrue(ingredients.stream().allMatch(Item::getIsBaseIngredient));

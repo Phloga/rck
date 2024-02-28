@@ -15,9 +15,9 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Entity
-public class ItemListing implements Serializable {
+public class RecipeLine implements Serializable {
     @EmbeddedId
-    private ItemListingKey id;
+    private RecipeLineKey id;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @MapsId("itemId")
@@ -52,8 +52,12 @@ public class ItemListing implements Serializable {
         return !id.getIsOutput();
     }
 
-    public ItemListing(Item item, Recipe recipe, Boolean isOutput){
-        id = new ItemListingKey(recipe.getId(),item.getId(),isOutput);
+    /**
+     * Constructor which extracts the key parameters from provided entities,
+     * other properties are left uninitialized
+     */
+    public RecipeLine(Item item, Recipe recipe, Boolean isOutput){
+        id = new RecipeLineKey(recipe.getId(),item.getId(),isOutput);
         this.item = item;
         this.recipe = recipe;
     }

@@ -2,6 +2,7 @@
 import ItemSelector from "./ItemSelector.vue"
 import UnitsDropdown from "./UnitsDropdown.vue"
 import NavBar from "./NavBar.vue"
+import {fetchActiveUser, fetchCommonIngredients, fetchUnitList} from "../serverApi"
 
 import {Form,Field, ErrorMessage} from "vee-validate"
 
@@ -18,10 +19,6 @@ import Table from "@editorjs/table"
 
 
 //const itemListUri = "/api/items/allItems";
-const itemListUri = "/api/items/commonIngredients";
-const unitListUri = "/api/units/getAll"
-const currentUserUri = "/api/user/self"
-
 
 const attrs = useAttrs()
 
@@ -149,22 +146,19 @@ async function saveRecipe(){
 
 onMounted(() => {
   if (!readOnlyMode.value){
-    fetch(itemListUri)
-    .then(response => response.json())
+    fetchCommonIngredients()
     .then(data => { 
       availableItems.value = new Map(data.map(rsp => [rsp.id, rsp]))
       remainingItems.value = new Map(availableItems.value)
     })
     .catch(error => console.error('Unable to get items.', error)); //TODO replace this with an error message for the user 
 
-    fetch(unitListUri)
-    .then(response => response.json())
+    fetchUnitList()
     .then(data => { 
       availableUnits.value = data})
     .catch(error => console.error('Unable to get unit list.', error)); //TODO replace this with an error message for the user 
 
-    fetch(currentUserUri)
-    .then(response => response.json())
+    fetchActiveUser()
     .then(data => { 
       currentUserCard.value = data})
     .catch(error => console.error('Unable to get user information.', error)); //TODO replace this with an error message for the user 

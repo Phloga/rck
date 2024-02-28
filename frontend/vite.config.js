@@ -63,7 +63,8 @@ export default defineConfig({
         registerSuccess: resolve(__dirname, 'templates/registerSuccess.html'),
         items: resolve(__dirname, 'templates/item/index.html'),
         recipeEditor: resolve(__dirname, 'templates/recipeEditor.html'),
-        recipeView: resolve(__dirname, 'templates/recipeView.html')
+        recipeView: resolve(__dirname, 'templates/recipeView.html'),
+        usersView: resolve(__dirname, 'templates/usersView.html')
       },
     },
   },

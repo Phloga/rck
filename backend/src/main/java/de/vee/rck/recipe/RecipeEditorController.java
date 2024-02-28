@@ -45,6 +45,7 @@ public class RecipeEditorController {
         return new ModelAndView("recipeView", modelMap);
     }
 
+    @PreAuthorize("hasAuthority('MODIFY_RECIPE')")
     @GetMapping("/d/{id}/edit")
     ModelAndView editRecipe(@PathVariable("id") Long recipeId) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
