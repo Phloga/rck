@@ -15,7 +15,7 @@ public class IngredientMatchingResultImpl implements IngredientMatchingResult{
     private Integer ingredientMatches;
     private Integer ingredientCount;
 
-    IngredientMatchingResultImpl(IngredientMatchingResult result){
+    public IngredientMatchingResultImpl(IngredientMatchingResult result){
         this(result.getRecipeId(),result.getRecipeName(), result.getIngredientMatches(), result.getIngredientCount());
     }
 }
