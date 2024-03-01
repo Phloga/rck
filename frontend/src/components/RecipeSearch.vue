@@ -4,9 +4,7 @@ import ItemSelector from "./ItemSelector.vue"
 import RecipeSearchResults from "./RecipeSearchResults.vue"
 import NavBar from "./NavBar.vue";
 import { ref, onMounted } from "vue";
-import {fetchActiveUser, fetchCommonIngredients} from "../serverApi"
-
-const recipesFindByIngredientsUri = "/api/recipes/findByIngredients"
+import {fetchActiveUser, fetchCommonIngredients, findByIngredients} from "../serverApi"
 
 const availableItems = ref(new Map())
 const selectedItems = ref(new Map())
@@ -33,15 +31,9 @@ function search() {
     selectedItems.value.forEach((item) => {
         items.push(item.id)
     })
-    let query = {itemIds: items}
+    //let query = {itemIds: items}
 
-    fetch(recipesFindByIngredientsUri, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(query)})
-        .then(response => response.json())
+    findByIngredients(items)
         .then(data => {
             queryResults.value = data
         })
@@ -71,11 +63,15 @@ onMounted(() => {
         <h1>Reverse Chefkoch</h1>
     </header>
     <main>
-        <input type='text' v-model="searchString">
-        <ItemSelector :itemMap="availableItems" :searchString="searchString" @itemSelected="itemAdd"></ItemSelector>
-        <br>
-        <ItemSelector v-bind:itemMap="selectedItems" searchString="" @itemSelected="itemRemove"></ItemSelector>
-        <button @click="search">Suche</button>
-        <RecipeSearchResults :results="queryResults"></RecipeSearchResults>
+        <div class="content-box">
+            <input type='text' v-model="searchString">
+        </div>
+        <div class="content-box content-box--no-scroll content-box--medium-height">
+            <ItemSelector :itemMap="availableItems" :searchString="searchString" @itemSelected="itemAdd"></ItemSelector>
+            <br>
+            <ItemSelector v-bind:itemMap="selectedItems" searchString="" @itemSelected="itemRemove"></ItemSelector>
+            <button @click="search">Suche</button>
+            <RecipeSearchResults :results="queryResults"></RecipeSearchResults>
+        </div>
     </main>
 </template>

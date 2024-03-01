@@ -44,14 +44,13 @@ public class RecipeService {
 
     /**
      *
-     * @param updatedRecipe payload
+     * @param updatedRecipe the updated/new recipe
      * @param recipeId  id of the affected recipe (null for create new)
      * @param userName  user who initiated the request
      * @return recipe entity after persisting
      */
     @Transactional
     public Recipe updateRecipe(RecipeDetails updatedRecipe,Long recipeId,String userName, boolean skipOwnerCheck){
-        //TODO delete listings before persisting the updated
         if (recipeId != null){
             Recipe recipe = recipeRepo.findById(recipeId).orElseThrow();
             AppUser owner = recipe.getOwner();

@@ -15,7 +15,7 @@ public class UnitController {
     private UnitRepository unitRepo;
     private UnitMapper unitMapper;
 
-    @GetMapping("/api/units/getAll")
+    @GetMapping("/api/units/all")
     public List<UnitDetails> sendAllunits(){
         var result = StreamSupport.stream(unitRepo.findAll().spliterator(), false).map((item) -> {
             return unitMapper.unitToUnitDetails(item);

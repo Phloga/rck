@@ -1,6 +1,7 @@
 package de.vee.rck.user;
 
 import de.vee.rck.user.dto.AppUserDetails;
+import de.vee.rck.user.dto.AppUserPreviewRecord;
 import de.vee.rck.user.dto.UserCard;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,6 +14,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +25,13 @@ public class UserService {
     private UserMapper userMapper;
 
     private static AppUserDetails anonymousUser;
+
+    @Transactional
+    public Collection<AppUserPreviewRecord> collectAllUsers(){
+        return StreamSupport.stream(userRepo.findAll().spliterator(),false)
+                .map(userMapper::appUserToAppUserPreviewRecord)
+                .toList();
+    }
 
     public UserCard anonymousUserCard(){
         if (anonymousUser == null){

@@ -1,27 +1,36 @@
 @import './base.css';
 
+
 .right-aligned {
   text-align: right;
 }
 
-.nav-list {
-  padding-top: 10px;
-}
-
-.nav-list > * {
-  padding: 0.3rem 0.3rem 0.3rem 0.3rem;
-}
-
-.item-selector-search {
-  min-width: 40ch;
-  padding: 0.33rem 0rem 0.33rem 0rem;
-  margin: 0.1rem 0.33rem 0.1rem 0.33rem;
-  text-align: inherit;
-}
 
 .content-box {
-  margin: 1rem 2rem 1rem 2rem;
+  margin: 1rem 1rem 1rem 1rem;
+  color: var(--color-bg-6)
 }
+
+.card {
+  color: var(--color-card)
+}
+
+.content-box.content-box--no-y-scroll-medium-height {
+  margin: 1rem 1rem 1rem 1rem;
+  color: var(--color-content-box);
+  overflow-y: hidden;
+  height: 6rem;
+}
+
+
+.content-box--medium-height {
+  height: 6rem;
+}
+
+.content-box--no-y-scroll-medium-height {
+  overflow-y: hidden;
+}
+
 
 .item-selector-innerbox {
   overflow-y: scroll;
@@ -145,24 +154,6 @@ table.item-table {
   width: 100%;
 }
 
-.dropdown {
-  position: absolute;
-  z-index: 100;
-  border: 1px solid var(--color-border);
-}
-
-.dropdown > button {
-  background-color: var(--color-background-item);
-  color: var(--color-button-text);
-  display: block;
-  width: 100%;
-  text-decoration: none;
-}
-
-.dropdown > a:hover {
-  background-color: var(--color-button-hover);
-  display: block;
-}
 
 .note{
   font-size: 0.66rem;
@@ -185,16 +176,6 @@ table.item-table {
 
 .section-container {
   text-align: center;
-}
-
-.editor {
-  display: inline-block;
-  text-align: left;
-  background-color: var(--color-background-editor);
-  color: var(--color-editor);
-  width: 100ch;
-  padding-top: 2rem;
-  overflow-wrap: break-word;
 }
 
 /*

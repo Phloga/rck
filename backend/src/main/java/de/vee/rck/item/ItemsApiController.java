@@ -21,7 +21,7 @@ public class ItemsApiController {
     ItemRepository itemRepo;
 
     @PreAuthorize("hasAuthority('LIST_ALL')")
-    @GetMapping(path="/api/items/allItems", produces="application/json")
+    @GetMapping(path="/api/items/all", produces="application/json")
     List<ItemDetails> allIngredients() {
         var result = StreamSupport.stream(itemRepo.findAll().spliterator(), false).map((item) -> {
                     return itemMapper.itemToItemDetails(item);
@@ -29,7 +29,7 @@ public class ItemsApiController {
         return result;
     }
 
-    @GetMapping(path="/api/items/commonIngredients", produces="application/json")
+    @GetMapping(path="/api/items/common-ingredients", produces="application/json")
     List<ItemDetails> commonIngredients() {
         Collection<Item> ingredients = itemRepo.findByIsBaseIngredient(true);
         return itemMapper.itemToItemDetails(ingredients);
@@ -37,7 +37,7 @@ public class ItemsApiController {
 
 
     @PreAuthorize("hasAuthority('MODIFY_ITEM')")
-    @PostMapping(path="/api/items/modify")
+    @PostMapping(path="/api/items/modified")
     public void changeItem(@RequestBody List<ItemDetails> itemDetails){
         itemRepo.saveAll(itemMapper.itemDetailsToItem(itemDetails));
     }

@@ -1,14 +1,9 @@
 <script setup>
-import ItemSelector from "./ItemSelector.vue"
-import UnitsDropdown from "./UnitsDropdown.vue"
+import "/assets/recipeEditor.css";
 import NavBar from "./NavBar.vue"
 import {fetchActiveUser} from "../serverApi"
 
-import {Form,Field, ErrorMessage} from "vee-validate"
-
-import {ref, onMounted, useAttrs } from 'vue'
-
-import * as yup from 'yup'
+import {ref, onMounted } from 'vue'
 
 
 import EditorJS from "@editorjs/editorjs"
@@ -19,22 +14,16 @@ import Table from "@editorjs/table"
 
 
 const unitListUri = "/api/units/getAll"
-const currentUserUri = "/api/user/self"
 
 const availableItems = ref(new Map())
 const remainingItems = ref(new Map())
 const availableUnits = ref(new Array())
-const searchString = ref("");
 
 const recipeName = ref("");
 const ingredients = ref(new Array())
 const products = ref(new Array())
 
 const currentUserCard = ref({userName: "", roles: []})
-
-const validateAmount = yup.number().min(0)
-
-const validateTitle = yup.string().required();
 
 var editor
 

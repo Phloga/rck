@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/recipes")
 @AllArgsConstructor
 public class RecipeApiController {
 
@@ -16,15 +15,21 @@ public class RecipeApiController {
 
     private RecipeMapper recipeMapper;
 
-    @PostMapping(path="/findByIngredients",
+    /*
+    @PostMapping(path="/api/recipes/recipes-by-ingredients",
             consumes="application/json",
             produces="application/json")
     public List<IngredientMatchingResult> findRecipesByIngredients(@RequestBody RecipeQuery query){
         return recipeRepo.findRecipesByIngredientIds(query.getItemIds());
+    }*/
+
+    @GetMapping(path="/api/recipes/by-ingredients", produces="application/json")
+    public List<IngredientMatchingResult> findRecipesByIngredients(@RequestParam List<Long> items){
+        return recipeRepo.findRecipesByIngredientIds(items);
     }
 
 
-    @GetMapping(path="/data/{id}",produces="application/json")
+    @GetMapping(path="/api/recipes/e/{id}",produces="application/json")
     RecipeQueryResponse sendRecipe(@PathVariable("id") Long recipeId){
         var recipe = recipeRepo.findById(recipeId).orElseThrow();
         return new RecipeQueryResponse(recipeMapper.toPackedRecipe(recipe), recipe.getOwner().getUserName());

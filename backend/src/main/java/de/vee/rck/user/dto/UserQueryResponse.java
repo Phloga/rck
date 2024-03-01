@@ -13,5 +13,5 @@ import java.util.Collection;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserQueryResponse {
-    Collection<UserCard> users;
+    Collection<AppUserPreviewRecord> users;
 }

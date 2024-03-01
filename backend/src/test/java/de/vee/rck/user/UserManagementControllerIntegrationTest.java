@@ -33,11 +33,10 @@ public class UserManagementControllerIntegrationTest {
     MockMvc mvc;
 
     @Test
-    @WithMockUser(roles="ADMIN")
     void getUsers_asAdmin_thenStatus200() throws Exception {
         mvc
                 .perform(get(usersSite)
-                        .with(user("admin").password("pass").roles("USER","ADMIN")))
+                        .with(user("admin").roles("USER","ADMIN")))
                 .andExpectAll(
                         status().isOk(),
                         content().contentType(MediaType.TEXT_HTML));

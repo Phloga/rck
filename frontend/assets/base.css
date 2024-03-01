@@ -16,12 +16,13 @@
   --color-heading: var(--vt-c-text-dark-1);
   --section-gap: 160px;
 
-  --color-background-editor: hsl(38, 55%, 91%);
-  --color-editor: hsl(225, 32%, 15%);
+  --color-background-editor: hsla(38, 55%, 91%,0%);
+  --color-editor: var(--color-text)
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
+    --color-text-selection-background: #50595d;
     --color-background: hsl(265, 89%, 11%);
     --color-background2: hsl(265, 89%, 4%);
     --color-background-item: hsl(245, 56%, 92%);
@@ -33,6 +34,8 @@
     --color-background-control: hsl(185, 87%, 88%);
     --color-button-text: var(--color-dark-text);
     --color-text: var(--color-light-text);
+    --color-text-faded: hsl(246, 32%, 77%);
+
     --color-content-box: hsl(266, 84%, 7%);
     --color-border: hsl(248, 20%, 16%);
     --color-border-hover: hsl(248, 45%, 83%);
@@ -40,6 +43,11 @@
     --color-input-text: var(--color-dark-text);
     --color-heading: var(--vt-c-text-dark-1);
     --color-divider: hsl(205, 75%, 97%);
+
+    --color-bg-4:  hsl(254, 14%, 23%);
+    --color-bg-5:  hsl(264, 11%, 18%);
+    --color-bg-6:  hsl(270, 6%, 14%);
+    --color-bg-7:  hsl(270, 4%, 11%);
   }
 }
 

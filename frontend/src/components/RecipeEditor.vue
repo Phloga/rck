@@ -1,6 +1,9 @@
 <script setup>
+import "/assets/recipeEditor.css";
+
+
 import ItemSelector from "./ItemSelector.vue"
-import UnitsDropdown from "./UnitsDropdown.vue"
+import UnitsComboBox from "./UnitsComboBox.vue"
 import NavBar from "./NavBar.vue"
 import {fetchActiveUser, fetchCommonIngredients, fetchUnitList} from "../serverApi"
 
@@ -19,8 +22,6 @@ import Table from "@editorjs/table"
 
 
 //const itemListUri = "/api/items/allItems";
-
-const attrs = useAttrs()
 
 const availableItems = ref(new Map())
 const remainingItems = ref(new Map())
@@ -58,7 +59,7 @@ function setupEditor(recipeObj){
      * - if true (or not specified), the order from 'tool' property will be used
      * - if an array of tool names, this order will be used
      */
-    // inlineToolbar: ['link', 'marker', 'bold', 'italic'],
+    //inlineToolbar: ['link', 'marker', 'bold', 'italic'],
     // inlineToolbar: true,
     tools: {
       paragraph: {
@@ -69,7 +70,7 @@ function setupEditor(recipeObj){
       },
       header: {
         class: Header,
-        inlineToolbar: ['marker', 'link'],
+        inlineToolbar: ['marker'],
         config: {
           placeholder: 'Header'
         },
@@ -89,12 +90,8 @@ function setupEditor(recipeObj){
       },
     },
     // defaultBlock: 'paragraph'
-    onReady: function(){
-      //saveButton.click();
-    },
-    onChange: function(api, event) {
-      //console.log('something changed', event);
-    }
+    // onReady: function(){},
+    //onChange: function(api, event) {}
   });
 
 }
@@ -205,7 +202,7 @@ onMounted(() => {
             <Field :id='"amount-"+i' :name='"amount-"+i' type='number' :rules='validateAmount' v-model='listing.amount' class='borderless-field'/>
             <ErrorMessage as="div" :name='"amount-"+i' class="note error"/>
           </td>
-          <td><UnitsDropdown v-model="listing.unit" :unitList="availableUnits"></UnitsDropdown></td>
+          <td><UnitsComboBox v-model="listing.unit" :unitList="availableUnits"></UnitsComboBox></td>
           <td><button type="button" @click="removeIngredient(i)" class="round-corners control">
             <i class="icon-remove"></i>
           </button></td>

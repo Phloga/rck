@@ -61,7 +61,7 @@ export default defineConfig({
         main: resolve(__dirname, 'templates/index.html'),
         register: resolve(__dirname, 'templates/register.html'),
         registerSuccess: resolve(__dirname, 'templates/registerSuccess.html'),
-        items: resolve(__dirname, 'templates/item/index.html'),
+        items: resolve(__dirname, 'templates/itemEditor.html'),
         recipeEditor: resolve(__dirname, 'templates/recipeEditor.html'),
         recipeView: resolve(__dirname, 'templates/recipeView.html'),
         usersView: resolve(__dirname, 'templates/usersView.html')

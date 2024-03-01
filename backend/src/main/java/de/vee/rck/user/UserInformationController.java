@@ -21,7 +21,7 @@ public class UserInformationController {
     private UserService userService;
 
     @ResponseBody
-    @GetMapping("/api/user/self")
+    @GetMapping("/api/users/self")
     public UserCard sendUserInformation(Authentication authentication, HttpServletResponse response){
         if (authentication == null || !authentication.isAuthenticated()) {
             return new AppUserDetails("anonymous", "", new ArrayList<>());
