@@ -9,11 +9,11 @@ public interface RecipeDetails {
     String getContent();
     void setContent(String content);
 
-    Collection<ItemListingDetails> getIngredients();
-    void setIngredients(Collection<ItemListingDetails> listings);
+    Collection<RecipeLineDTO> getIngredients();
+    void setIngredients(Collection<RecipeLineDTO> listings);
 
-    Collection<ItemListingDetails> getProducts();
-    void setProducts(Collection<ItemListingDetails> listings);
+    Collection<RecipeLineDTO> getProducts();
+    void setProducts(Collection<RecipeLineDTO> listings);
 
     default void copyFrom(RecipeDetails details){
         this.setIngredients(details.getIngredients());

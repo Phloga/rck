@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemDetails implements Serializable {
+public class ItemDTO implements Serializable {
     private Long id;
     private String name;
     private Boolean isBaseIngredient;

@@ -64,7 +64,8 @@ export default defineConfig({
         items: resolve(__dirname, 'templates/itemEditor.html'),
         recipeEditor: resolve(__dirname, 'templates/recipeEditor.html'),
         recipeView: resolve(__dirname, 'templates/recipeView.html'),
-        usersView: resolve(__dirname, 'templates/usersView.html')
+        usersIndex: resolve(__dirname, 'templates/user/users-index.html'),
+        usersEditor: resolve(__dirname, 'templates/user/users-editor.html')
       },
     },
   },

@@ -1,6 +1,5 @@
 package de.vee.rck.user.dto;
 
-import jakarta.validation.constraints.NegativeOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +11,9 @@ import java.util.Collection;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserQueryResponse {
-    Collection<AppUserPreviewRecord> users;
+public class UserQueryResponse implements UserCard {
+    private String userName;
+    private String email;
+    private Collection<String> roles;
+    private boolean enabled;
 }

@@ -1,0 +1,41 @@
+spring:
+  h2:
+    console:
+      enabled: yes
+  web:
+    resources:
+      static-locations: classpath:/assets/
+  datasource:
+    url: "jdbc:h2:mem:rck;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+    driverClassName: "org.h2.Driver"
+    username: "sa"
+    password: ""
+  jpa:
+    open-in-view: no
+  mvc:
+    log-request-details: true
+    static-path-pattern: /assets/**
+  thymeleaf:
+    prefix: classpath:/templates/
+  devtools:
+    restart:
+      enabled: true
+server:
+  servlet:
+    session:
+      cookie:
+        same-site: LAX
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG
+          nodeValue: DEBUG
+rck:
+  init:
+    recipes-location: "classpath:data/default-recipes.json"
+    units-location: "classpath:data/default-units.json"
+    items-location: "classpath:data/default-items.json"

@@ -2,11 +2,11 @@ package de.vee.rck.init;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.vee.rck.RecipeApplicationConfiguration;
+import de.vee.rck.RecipeApplicationInitializationConfiguration;
 import de.vee.rck.item.ItemMapper;
 import de.vee.rck.item.ItemRepository;
+import de.vee.rck.item.dto.ItemDTO;
 import de.vee.rck.recipe.RecipeRepository;
-import de.vee.rck.item.dto.ItemDetails;
 import de.vee.rck.recipe.dto.PackedRecipe;
 import de.vee.rck.recipe.RecipeMapper;
 import de.vee.rck.units.Unit;
@@ -44,7 +44,7 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
 
     private final Logger logger;
     @Autowired
-    private RecipeApplicationConfiguration config;
+    private RecipeApplicationInitializationConfiguration config;
     @Autowired
     private AppUserRepository userRepository;
     @Autowired
@@ -70,9 +70,12 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
     private ItemMapper itemMapper;
     private boolean setupComplete;
 
+    ObjectMapper jsonMapper;
+
     public InitialSetup(){
         this.setupComplete = false;
         this.logger = LoggerFactory.getLogger(InitialSetup.class);
+        this.jsonMapper = new ObjectMapper();
     }
 
     @Override
@@ -110,9 +113,16 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
             userRepository.save(user);
         }
 
-        if (config.getLoadSampleData() && itemRepo.count() == 0){
-            addSampleData();
+        if (config.getUnitsLocation() != null && unitRepo.count() == 0) {
+            loadUnits(config.getUnitsLocation());
         }
+        if (config.getItemsLocation() != null && itemRepo.count() == 0){
+            loadIngredients(config.getItemsLocation());
+        }
+        if (config.getRecipesLocation() != null && recipeRepo.count() == 0){
+            loadRecipes(config.getRecipesLocation());
+        }
+
         setupComplete = true;
     }
 
@@ -141,27 +151,70 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
     }
 
     @Transactional
-    protected void addSampleData() {
+    protected void loadUnits(String unitsLocation) {
         try {
-            String ingredientsJsonText = Utils.readResourceAsString(resLoader, defaultIngredientsLocation);
-            String recipesJsonText = Utils.readResourceAsString(resLoader, defaultRecipesLocation);
-            String unitsJsonText = Utils.readResourceAsString(resLoader, defaultUnitsLocation);
+            String unitsJsonText = Utils.readResourceAsString(resLoader, unitsLocation);
+            List<UnitDetails> initialUnitDetails = jsonMapper.readValue(unitsJsonText,
+                    jsonMapper.getTypeFactory().constructCollectionType(List.class, UnitDetails.class));
+            List<Unit> initialUnits = unitMapper.unitDetailsToUnit(initialUnitDetails);
+            unitRepo.saveAll(initialUnits);
+        } catch (IOException ex){
+            logger.error(MessageFormat.format("Failed to load units from {0}!", unitsLocation));
+            logger.error(ex.getMessage());
+        }
+    }
 
+    @Transactional
+    protected void loadIngredients(String ingredientsLocation) {
+        try {
+            String ingredientsJsonText = Utils.readResourceAsString(resLoader, ingredientsLocation);
+            List<ItemDTO> initialIngredients = jsonMapper.readValue(ingredientsJsonText,
+                    jsonMapper.getTypeFactory().constructCollectionType(List.class, ItemDTO.class));
+            var items = itemMapper.itemDTOToItem(initialIngredients);
+            itemRepo.saveAll(items);
+        } catch (IOException ex){
+            logger.error(MessageFormat.format("Failed to load ingredients from {0}!", ingredientsLocation));
+            logger.error(ex.getMessage());
+        }
+    }
+
+    @Transactional
+    protected void loadRecipes(String recipesLocation) {
+        try {
+            String recipesJsonText = Utils.readResourceAsString(resLoader, recipesLocation);
+            List<PackedRecipe> initialRecipes = jsonMapper.readValue(recipesJsonText,
+                    jsonMapper.getTypeFactory().constructCollectionType(List.class, PackedRecipe.class));
+            for (PackedRecipe details : initialRecipes){
+                var recipe = recipeMapper.toRecipe(details, null);
+                recipeRepo.save(recipe);
+            }
+        } catch (IOException ex){
+            logger.error(MessageFormat.format("Failed to load recipes from {0}!", recipesLocation));
+            logger.error(ex.getMessage());
+        }
+    }
+
+
+    @Transactional
+    protected void addSampleData(String ingredientsLocation, String recipesLocation, String unitsLocation) {
+        try {
             ObjectMapper mapper = new ObjectMapper();
 
+            String unitsJsonText = Utils.readResourceAsString(resLoader, unitsLocation);
             List<UnitDetails> initialUnitDetails = mapper.readValue(unitsJsonText,
                     mapper.getTypeFactory().constructCollectionType(List.class, UnitDetails.class));
             List<Unit> initialUnits = unitMapper.unitDetailsToUnit(initialUnitDetails);
-
             unitRepo.saveAll(initialUnits);
 
-            List<ItemDetails> initialIngredients = mapper.readValue(ingredientsJsonText,
-                    mapper.getTypeFactory().constructCollectionType(List.class, ItemDetails.class));
+            String ingredientsJsonText = Utils.readResourceAsString(resLoader, ingredientsLocation);
+            List<ItemDTO> initialIngredients = mapper.readValue(ingredientsJsonText,
+                    mapper.getTypeFactory().constructCollectionType(List.class, ItemDTO.class));
 
             //var items = RecipeMapper.toItemList(initialIngredients);
-            var items = itemMapper.itemDetailsToItem(initialIngredients);
+            var items = itemMapper.itemDTOToItem(initialIngredients);
             itemRepo.saveAll(items);
 
+            String recipesJsonText = Utils.readResourceAsString(resLoader, recipesLocation);
             List<PackedRecipe> initialRecipes = mapper.readValue(recipesJsonText,
                     mapper.getTypeFactory().constructCollectionType(List.class, PackedRecipe.class));
 

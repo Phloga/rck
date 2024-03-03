@@ -1,12 +1,10 @@
 package de.vee.rck.item;
 
-import de.vee.rck.item.dto.ItemDetails;
+import de.vee.rck.item.dto.ItemDTO;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,24 +20,24 @@ public class ItemsApiController {
 
     @PreAuthorize("hasAuthority('LIST_ALL')")
     @GetMapping(path="/api/items/all", produces="application/json")
-    List<ItemDetails> allIngredients() {
+    List<ItemDTO> allIngredients() {
         var result = StreamSupport.stream(itemRepo.findAll().spliterator(), false).map((item) -> {
-                    return itemMapper.itemToItemDetails(item);
+                    return itemMapper.itemToItemDTO(item);
         }).collect(Collectors.toList());
         return result;
     }
 
     @GetMapping(path="/api/items/common-ingredients", produces="application/json")
-    List<ItemDetails> commonIngredients() {
+    List<ItemDTO> commonIngredients() {
         Collection<Item> ingredients = itemRepo.findByIsBaseIngredient(true);
-        return itemMapper.itemToItemDetails(ingredients);
+        return itemMapper.itemToItemDTO(ingredients);
     }
 
 
     @PreAuthorize("hasAuthority('MODIFY_ITEM')")
     @PostMapping(path="/api/items/modified")
-    public void changeItem(@RequestBody List<ItemDetails> itemDetails){
-        itemRepo.saveAll(itemMapper.itemDetailsToItem(itemDetails));
+    public void changeItem(@RequestBody List<ItemDTO> itemDetails){
+        itemRepo.saveAll(itemMapper.itemDTOToItem(itemDetails));
     }
 
     @PreAuthorize("hasAuthority('REMOVE_ITEM')")
@@ -51,12 +49,12 @@ public class ItemsApiController {
     }
 
     @GetMapping(path="/api/item/{id}", produces="application/json")
-    ItemDetails sendItemDetails(@PathVariable Long id) {
+    ItemDTO sendItemDetails(@PathVariable Long id) {
         var item = itemRepo.findById(id);
         if (item.isPresent()){
-            return itemMapper.itemToItemDetails(item.get());
+            return itemMapper.itemToItemDTO(item.get());
         }
-        return new ItemDetails();
+        return new ItemDTO();
     }
 
 }

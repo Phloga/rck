@@ -27,7 +27,7 @@ public class RecipeMapper {
     private ItemRepository itemRepo;
     private UnitRepository unitRepo;
 
-    protected static RecipeLine makeItemListing(ItemListingDetails details, boolean isOutput, Item item, Recipe recipe, Unit unit) {
+    protected static RecipeLine makeItemListing(RecipeLineDTO details, boolean isOutput, Item item, Recipe recipe, Unit unit) {
         RecipeLine listing = new RecipeLine(item,recipe,isOutput);
         listing.setIsOptional(details.getIsOptional());
         listing.setAmount(details.getAmount());
@@ -35,7 +35,7 @@ public class RecipeMapper {
         return listing;
     }
 
-    protected static Stream<ItemListingDetails> findListingWithMissingIds(Stream<ItemListingDetails> listingDetails){
+    protected static Stream<RecipeLineDTO> findListingWithMissingIds(Stream<RecipeLineDTO> listingDetails){
         return listingDetails.filter(
                 (listing) -> {return listing.getItemId() == null;}
         );
@@ -43,7 +43,7 @@ public class RecipeMapper {
 
     /** @param createItems : when true create item objects for listings with itemId set to null*/
     protected RecipeLine createItemListing(
-            ItemListingDetails details, Recipe recipe, boolean isOutput, Map<Long, Item> id2item, Map<String, Unit> name2unit, boolean createItems) {
+            RecipeLineDTO details, Recipe recipe, boolean isOutput, Map<Long, Item> id2item, Map<String, Unit> name2unit, boolean createItems) {
         Unit unit = name2unit.get(details.getUnit());
         if (unit == null) {
             throw new RecipeMappingFailure(MessageFormat.format(
@@ -68,10 +68,10 @@ public class RecipeMapper {
     /** fetches and sets item ids based on the unique item names of elements in listings
      *  This method finds ids with the help of ItemRepository
      * */
-    protected void updateItemIds(Collection<ItemListingDetails> listings){
+    protected void updateItemIds(Collection<RecipeLineDTO> listings){
         Collection<ItemIdentifiers> itemIdentifiers = itemRepo.findItemIdentifiersByNameIn(
                 listings.stream().map(
-                        ItemListingDetails::getItemName).collect(Collectors.toList()));
+                        RecipeLineDTO::getItemName).collect(Collectors.toList()));
         Map<String, Long> itemName2Id = itemIdentifiers.stream().collect(
                 Collectors.toMap(ItemIdentifiers::getName,ItemIdentifiers::getId));
         // add missing ids
@@ -110,7 +110,7 @@ public class RecipeMapper {
         updateItemIds(findListingWithMissingIds(allListings.stream()).toList());
         // map for fast lookup of items
         var itemIterator = itemRepo.findAllById(
-                allListings.stream().map(ItemListingDetails::getItemId).filter(Objects::nonNull).collect(
+                allListings.stream().map(RecipeLineDTO::getItemId).filter(Objects::nonNull).collect(
                         Collectors.toList()));
         Map<Long, Item> id2item = StreamSupport.stream(
                 itemIterator.spliterator(), false).collect(Collectors.toMap(
@@ -142,8 +142,8 @@ public class RecipeMapper {
         return recipe;
     }
 
-    public ItemListingDetails toItemListingDetails(RecipeLine listing){
-        return new ItemListingDetails(
+    public RecipeLineDTO toItemListingDetails(RecipeLine listing){
+        return new RecipeLineDTO(
                 listing.getId().getItemId(),
                 listing.getItem().getName(),
                 listing.getIsOptional(),

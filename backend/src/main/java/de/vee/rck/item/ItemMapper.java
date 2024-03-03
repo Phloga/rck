@@ -1,8 +1,6 @@
 package de.vee.rck.item;
 
-import de.vee.rck.item.dto.ItemDetails;
-import de.vee.rck.units.Unit;
-import de.vee.rck.units.dto.UnitDetails;
+import de.vee.rck.item.dto.ItemDTO;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,10 +16,10 @@ public interface ItemMapper {
             @Mapping(target = "name"),
             @Mapping(target = "isBaseIngredient")
     })
-    public Item itemDetailsToItem(ItemDetails details);
+    public Item itemDTOToItem(ItemDTO dto);
 
-    public List<Item> itemDetailsToItem(Collection<ItemDetails> details);
+    public List<Item> itemDTOToItem(Collection<ItemDTO> dto);
     @InheritInverseConfiguration
-    public ItemDetails itemToItemDetails(Item unit);
-    public List<ItemDetails> itemToItemDetails(Collection<Item> items);
+    public ItemDTO itemToItemDTO(Item item);
+    public List<ItemDTO> itemToItemDTO(Collection<Item> items);
 }

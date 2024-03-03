@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ItemListingDetails {
+public class RecipeLineDTO {
     private Long itemId;
     private String itemName;
     private Boolean isOptional;

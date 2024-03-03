@@ -1,9 +1,7 @@
 package de.vee.rck.user;
 
-import de.vee.rck.user.AppUser;
-import de.vee.rck.user.dto.AppUserDetails;
-import de.vee.rck.user.dto.AppUserPreviewRecord;
-import org.mapstruct.InheritInverseConfiguration;
+import de.vee.rck.user.dto.UserQueryResponse;
+import de.vee.rck.user.dto.AppUserPreview;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -30,16 +28,17 @@ public interface UserMapper {
     @Mappings({
             @Mapping(target = "userName"),
             @Mapping(target = "email"),
-            @Mapping(target = "roles")
+            @Mapping(target = "roles"),
+            @Mapping(target = "enabled")
     })
-    AppUserDetails appUserToUserDetails(AppUser user);
+    UserQueryResponse appUserToUserQueryResponse(AppUser user);
 
     @Mappings({
             @Mapping(target = "userName"),
             @Mapping(target = "enabled"),
             @Mapping(target = "roles")
     })
-    AppUserPreviewRecord appUserToAppUserPreviewRecord(AppUser user);
+    AppUserPreview appUserToAppUserPreview(AppUser user);
 
 
     default Collection<String> map(Collection<UserRole> value) {

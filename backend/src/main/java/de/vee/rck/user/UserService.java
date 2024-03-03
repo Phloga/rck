@@ -1,11 +1,9 @@
 package de.vee.rck.user;
 
-import de.vee.rck.user.dto.AppUserDetails;
-import de.vee.rck.user.dto.AppUserPreviewRecord;
+import de.vee.rck.user.dto.UserQueryResponse;
+import de.vee.rck.user.dto.AppUserPreview;
 import de.vee.rck.user.dto.UserCard;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,26 +22,34 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
     private UserMapper userMapper;
 
-    private static AppUserDetails anonymousUser;
+    private static UserQueryResponse anonymousUser;
+
+
 
     @Transactional
-    public Collection<AppUserPreviewRecord> collectAllUsers(){
+    public Collection<AppUserPreview> collectAllUsers(){
         return StreamSupport.stream(userRepo.findAll().spliterator(),false)
-                .map(userMapper::appUserToAppUserPreviewRecord)
+                .map(userMapper::appUserToAppUserPreview)
                 .toList();
+    }
+
+    @Transactional
+    public Optional<UserQueryResponse> loadAppUserDetails(Long id){
+        var user = userRepo.findById(id);
+        return user.map(appUser -> userMapper.appUserToUserQueryResponse(appUser));
     }
 
     public UserCard anonymousUserCard(){
         if (anonymousUser == null){
-            anonymousUser = new AppUserDetails("anonymous", "", new ArrayList<>());
+            anonymousUser = new UserQueryResponse("anonymous", "", new ArrayList<>(), false);
         }
         return anonymousUser;
     }
 
     @Transactional
-    public Optional<UserCard> loadUserCard(String userName){
+    public Optional<UserQueryResponse> loadAppUserDetailsByName(String userName){
         var user = userRepo.findByUserName( userName);
-        return user.map(appUser -> userMapper.appUserToUserDetails(appUser));
+        return user.map(appUser -> userMapper.appUserToUserQueryResponse(appUser));
     }
 
     public AppUser makeAppUser(String name, String password, Collection<String> roles){

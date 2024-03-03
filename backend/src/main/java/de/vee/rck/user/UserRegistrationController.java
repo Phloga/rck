@@ -73,6 +73,6 @@ public class UserRegistrationController {
             return new ModelAndView("register", map);
         }
         //redirect to success page
-        return new ModelAndView("registerSuccess", "user", userMapper.appUserToUserDetails(user));
+        return new ModelAndView("registerSuccess", "user", userMapper.appUserToUserQueryResponse(user));
     }
 }

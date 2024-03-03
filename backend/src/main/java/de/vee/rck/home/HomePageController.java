@@ -20,9 +20,6 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 @NoArgsConstructor
 public class HomePageController {
-
-    static final String rootRedirect = "/index.html";
-
     Logger logger = LoggerFactory.getLogger(HomePageController.class);;
 
     /*

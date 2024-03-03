@@ -24,7 +24,6 @@ import java.util.List;
 @Transactional
 public class AppUserDetailsService implements UserDetailsService {
     private AppUserRepository userRepo;
-    private UserRoleRepository roleRepo;
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
