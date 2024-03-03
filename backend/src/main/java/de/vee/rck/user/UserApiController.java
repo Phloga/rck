@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -20,11 +19,9 @@ import java.util.Collection;
 @Controller
 @AllArgsConstructor
 @RestController
-public class UserInformationApiController {
+public class UserApiController {
 
-    private AppUserRepository userRepo;
     private UserService userService;
-
 
     @GetMapping("/api/users/self")
     public UserCard sendUserInformation(Authentication authentication, HttpServletResponse response){

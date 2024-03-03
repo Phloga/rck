@@ -1,21 +1,16 @@
 package de.vee.rck.user;
 
-import de.vee.rck.user.dto.AppUserPreview;
-import de.vee.rck.user.dto.UserQueryResponse;
+import de.vee.rck.user.dto.UserUpdateRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Collection;
+import java.text.MessageFormat;
 
 @Controller
 @AllArgsConstructor
@@ -27,7 +22,24 @@ public class UserManagementController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     String sendUsersIndex()
     {
-        return "user/users-index";
+        return "user/index";
+    }
+
+
+    @PutMapping("/users/p/")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void receiveNewUserInformation(@RequestBody UserUpdateRequest userData, HttpServletRequest request, HttpServletResponse response){
+        var newUser = userService.updateAppUser(userData, userData.getUserName());
+        response.setHeader("Location", MessageFormat.format("/users/p/{0}", newUser.getUserName()));
+        response.setStatus(HttpStatus.CREATED.value());
+    }
+
+    @PostMapping("/users/p/{name}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void receiveUserInformation(@PathVariable String name, @RequestBody UserUpdateRequest userData, HttpServletRequest request, HttpServletResponse response){
+        var updatedUser = userService.updateAppUser(userData, name);
+        response.setHeader("Location", MessageFormat.format("/users/p/{0}", updatedUser.getUserName()));
+        response.setStatus(HttpStatus.CREATED.value());
     }
 
 
@@ -42,7 +54,7 @@ public class UserManagementController {
                 return null;
             }
             response.setHeader("Cache-Control", "private");
-            return new ModelAndView("/user/user-editor", "user", user.get());
+            return new ModelAndView("/user/editor", "user", user.get());
         }
         response.setStatus(HttpStatus.FORBIDDEN.value());
         return null;

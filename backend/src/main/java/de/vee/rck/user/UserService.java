@@ -1,17 +1,13 @@
 package de.vee.rck.user;
 
-import de.vee.rck.user.dto.UserQueryResponse;
-import de.vee.rck.user.dto.AppUserPreview;
-import de.vee.rck.user.dto.UserCard;
+import de.vee.rck.user.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -52,38 +48,45 @@ public class UserService {
         return user.map(appUser -> userMapper.appUserToUserQueryResponse(appUser));
     }
 
-    public AppUser makeAppUser(String name, String password, Collection<String> roles){
-        AppUser user = new AppUser();
-        user.setUserName(name);
-        user.setPassword(passwordEncoder.encode(password));
-        for (String role : roles){
-            addRole(user, role);
+    public AppUser createAppUser(UserUpdateRequest user) {
+        if (user.getUserName() == null)
+            throw new IllegalArgumentException("Attempted to create user without name");
+
+        if (userRepo.findByUserName(user.getUserName()).isPresent()) {
+            throw new IllegalArgumentException("Attempted to create already existing user");
         }
-        return user;
+        AppUser newUser = new AppUser();
+        userMapper.updateAppUserFromAppUserDetails(newUser, user, user.getPassword());
+        return userRepo.save(newUser);
     }
 
-    /** loads role from repository and adds it to user*/
-    void addRole(AppUser user, String roleName){
-        UserRole role = userRoleRepo.findByName(roleName);
-        if (role != null){
-            user.getRoles().add(role);
-        } else {
-            throw new UserRoleNotFoundError(MessageFormat.format("addRole(..) was unable to find role with name {0}", roleName));
-        }
-    }
-
-    AppUser registerNewUser(AppUser user) throws UserRegistrationRequestError {
-        return registerNewUser(user, false);
-    }
     @Transactional
-    AppUser registerNewUser(AppUser user, boolean allowDuplicateEmail) throws UserRegistrationRequestError {
+    public AppUser updateAppUser(UserUpdateRequest user, String name) {
+        var userEntity = userRepo.findByUserName(name);
+        if (userEntity.isEmpty()){
+            // create new user
+            if (user.getUserName().equals(name)){
+                return createAppUser(user);
+            } else {
+                throw new IllegalArgumentException("User name for new user mismatches with parameter name");
+            }
+        } else {
+            // update exiting user
+            AppUser updatedUser = userEntity.get();
+            userMapper.updateAppUserFromAppUserDetails(updatedUser, user, user.getPassword());
+            return userRepo.save(updatedUser);
+        }
+    }
+
+    @Transactional
+    AppUser registerNewUser(AppUser user, boolean allowDuplicateEmail) throws UserCRUDError {
         boolean nameAvailable = false;
         boolean emailAvailable = false;
         nameAvailable = userRepo.findByUserName(user.getUserName()) == null;
         emailAvailable = allowDuplicateEmail || userRepo.findByEmail(user.getEmail()) == null;
 
         if (!(nameAvailable && emailAvailable)){
-            throw new UserRegistrationRequestError(!nameAvailable, !emailAvailable);
+            throw new UserCRUDError(!nameAvailable, !emailAvailable);
         }
         return userRepo.save(user);
     }

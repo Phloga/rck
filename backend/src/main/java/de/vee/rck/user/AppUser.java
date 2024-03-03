@@ -32,13 +32,14 @@ public class AppUser {
                     name = "role_id", referencedColumnName = "id"))
     private Collection<UserRole> roles;
 
+    /*
     @ManyToMany(mappedBy = "permittedUsers")
     private Collection<Recipe> recipes;
-
+    */
     public AppUser(){
         this.enabled = false;
         this.tokenExpired = true;
         this.roles = new ArrayList<UserRole>();
-        this.recipes = new ArrayList<Recipe>();
+        //this.recipes = new ArrayList<Recipe>();
     }
 }

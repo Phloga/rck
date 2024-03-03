@@ -34,6 +34,7 @@ public class Recipe implements Serializable {
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private AppUser owner;
 
+    /*
     @ManyToMany
     @JoinTable(
             name = "recipes_users",
@@ -42,7 +43,7 @@ public class Recipe implements Serializable {
             inverseJoinColumns = @JoinColumn(
                     name = "recipe_id", referencedColumnName = "id"))
     private Collection<AppUser> permittedUsers;
-
+    */
     public Recipe(){
         name = "";
         content = "";
