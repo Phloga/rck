@@ -20,7 +20,12 @@ public class UserService {
 
     private static UserQueryResponse anonymousUser;
 
-
+    @Transactional
+    public Collection<String> availableUserRoles() {
+        return StreamSupport.stream(userRoleRepo.findAll().spliterator(),false)
+                .map(UserRole::getName)
+                .toList();
+    }
 
     @Transactional
     public Collection<AppUserPreview> collectAllUsers(){

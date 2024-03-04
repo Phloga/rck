@@ -8,11 +8,33 @@
 
 .content-box {
   margin: 1rem 1rem 1rem 1rem;
-  color: var(--color-bg-6)
+  color: var(--color-bg-6);
 }
 
 .card {
-  color: var(--color-card)
+  background: var(--color-bg-5);
+  color: var(--color-text);
+  list-style-type: none;
+  margin: 1rem;
+  padding: 0;
+  max-width: (100vw - 20px);
+  box-shadow: 0 1px 3px 0 rgb(0, 0, 0), 0 1px 2px -1px rgb(0,0,0);
+}
+
+a.card__link:link{
+  text-decoration: none;
+}
+
+.card__link:visited{
+  text-decoration: none;
+}
+
+.card__link:hover{
+  text-decoration: none;
+}
+
+.card__link:active{
+  text-decoration: none;
 }
 
 .content-box.content-box--no-y-scroll-medium-height {
@@ -177,6 +199,10 @@ table.item-table {
 .section-container {
   text-align: center;
 }
+
+
+
+
 
 /*
 #app {

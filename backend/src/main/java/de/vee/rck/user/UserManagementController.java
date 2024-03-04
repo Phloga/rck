@@ -1,5 +1,7 @@
 package de.vee.rck.user;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.vee.rck.user.dto.UserUpdateRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,7 +38,7 @@ public class UserManagementController {
 
     @PostMapping("/users/p/{name}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void receiveUserInformation(@PathVariable String name, @RequestBody UserUpdateRequest userData, HttpServletRequest request, HttpServletResponse response){
+    public void receiveUpdatedUserInformation(@PathVariable String name, @RequestBody UserUpdateRequest userData, HttpServletRequest request, HttpServletResponse response){
         var updatedUser = userService.updateAppUser(userData, name);
         response.setHeader("Location", MessageFormat.format("/users/p/{0}", updatedUser.getUserName()));
         response.setStatus(HttpStatus.CREATED.value());
@@ -44,7 +46,8 @@ public class UserManagementController {
 
 
     @GetMapping("/users/p/{name}")
-    ModelAndView sendUserPage(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
+    @PreAuthorize("isAuthenticated()")
+    ModelAndView sendUserPage(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
         if (request.getUserPrincipal().getName().equals(name) || request.isUserInRole("ADMIN")){
             var user = userService.loadAppUserDetailsByName(name);
             if (user.isEmpty()){
@@ -53,8 +56,10 @@ public class UserManagementController {
                 response.setStatus(500);
                 return null;
             }
-            response.setHeader("Cache-Control", "private");
-            return new ModelAndView("/user/editor", "user", user.get());
+            //response.setHeader("Cache-Control", "private");
+            ObjectMapper mapper = new ObjectMapper();
+            String jsonText = mapper.writeValueAsString(user.get());
+            return new ModelAndView("user/editor", "user", jsonText);
         }
         response.setStatus(HttpStatus.FORBIDDEN.value());
         return null;

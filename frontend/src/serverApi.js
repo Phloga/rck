@@ -28,10 +28,6 @@ function fetchCommonIngredients() {
     return fetchAwaitJson(commonIngredientsListUri)
 }
 
-function fetchRoles(){
-    return fetchAwaitJson(userRoleListUri)
-}
-
 function findByIngredients(itemIds){
     const params = new URLSearchParams()
     params.append("items",itemIds)
@@ -44,6 +40,5 @@ export {
     fetchActiveUser, 
     fetchUnitList,
     fetchCommonIngredients,
-    fetchRoles,
     findByIngredients
 }

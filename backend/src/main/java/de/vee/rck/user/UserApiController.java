@@ -37,7 +37,7 @@ public class UserApiController {
         return null;
     }
 
-    @GetMapping(path="/api/users/p/{name}", produces="application/json")
+    @GetMapping(path="/sec-api/users/p/{name}", produces="application/json")
     @PreAuthorize("isAuthenticated()")
     UserQueryResponse sendSpecificUserInformation(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
         if (request.getUserPrincipal().getName().equals(name) || request.isUserInRole("ADMIN")){
@@ -55,9 +55,16 @@ public class UserApiController {
         return null;
     }
 
-    @GetMapping(path="/api/users", produces="application/json")
+    @GetMapping(path="/sec-api/users/all", produces="application/json")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     Collection<AppUserPreview> sendAllUsers(){
         return userService.collectAllUsers();
+    }
+
+
+    @GetMapping(path="/sec-api/users/roles/all", produces="application/json")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    Collection<String> sendAllRoles() {
+        return userService.availableUserRoles();
     }
 }

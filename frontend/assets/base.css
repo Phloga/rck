@@ -20,6 +20,11 @@
   --color-editor: var(--color-text)
 }
 
+/*  */
+:root {
+  --border-radius-small: 2px;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --color-text-selection-background: #50595d;

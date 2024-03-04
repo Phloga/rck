@@ -12,6 +12,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.nio.charset.StandardCharsets;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -20,11 +22,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = UserManagementController.class)
-//@AutoConfigureMockMvc
-/*@SpringBootTest(
+@AutoConfigureMockMvc
+@SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.MOCK,
-        classes = RecipeApplication.class)*/
+        classes = RecipeApplication.class)
 public class UserManagementControllerIntegrationTest {
 
     static final String usersSite = "/users/index";
@@ -39,14 +40,16 @@ public class UserManagementControllerIntegrationTest {
                         .with(user("admin").roles("USER","ADMIN")))
                 .andExpectAll(
                         status().isOk(),
-                        content().contentType(MediaType.TEXT_HTML));
+                        content().contentType(new MediaType(MediaType.TEXT_HTML, StandardCharsets.UTF_8))
+
+                );
     }
 
     @Test
-    void getUsers_asAdmin_thenFail() throws Exception {
+    void getUsers_asUser_thenFail() throws Exception {
         mvc
                 .perform(get(usersSite)
-                        .with(user("snorlax").roles("USER","ADMIN")))
+                        .with(user("snorlax").roles("USER")))
                 .andExpect(
                         status().is4xxClientError());
     }
