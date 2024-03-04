@@ -20,7 +20,7 @@ function fetchAllRoles() {
 function sendUser(user, name) {
     const uri = userEndpoint + '/' + name
     return fetch(uri, {
-        method: "POST",
+        method: "PUT",
         headers: {
             "Content-Type" : "application/json",
         },

@@ -65,6 +65,7 @@ a.card__link:link{
   border: none;
   border-radius: 0.33em;
   background-color: rgba(255,255,255,0.3);
+  margin: 3px 3px 3px 3px;
   color: var(--color-text);
 }
 
@@ -80,17 +81,22 @@ input.borderless-field:focus {
 }
 
 
+.large-text {
+  font-size:  1.5rem;
+}
+
 .largetext {
   font-size:  1.5rem;
 }
 
 .round-corners {
   padding: 0.33em;
-  margin: 2px;
+  margin: 3px 3px 3px 3px;
   border: none;
   border-radius: 0.66em;
   font-size: 1.0rem;
 }
+
 
 button.critical {
   color: var(--color-button-text);
@@ -200,26 +206,6 @@ table.item-table {
   text-align: center;
 }
 
-
-
-
-
-/*
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
-*/
 
 @media (hover: hover) {
   a:hover {

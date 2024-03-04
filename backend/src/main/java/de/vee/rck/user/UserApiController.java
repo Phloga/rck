@@ -3,6 +3,7 @@ package de.vee.rck.user;
 import de.vee.rck.user.dto.UserQueryResponse;
 import de.vee.rck.user.dto.AppUserPreview;
 import de.vee.rck.user.dto.UserCard;
+import de.vee.rck.user.dto.UserUpdateRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -10,10 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.MessageFormat;
 import java.util.Collection;
 
 @Controller
@@ -66,5 +66,22 @@ public class UserApiController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     Collection<String> sendAllRoles() {
         return userService.availableUserRoles();
+    }
+
+    /*
+    @PutMapping("/sec-api/users/p/")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void receiveNewUserInformation(@RequestBody UserUpdateRequest userData, HttpServletRequest request, HttpServletResponse response){
+        var newUser = userService.updateAppUser(userData, userData.getUserName());
+        response.setHeader("Location", MessageFormat.format("/users/p/{0}", newUser.getUserName()));
+        response.setStatus(HttpStatus.CREATED.value());
+    }*/
+
+    @PutMapping("/sec-api/users/p/{name}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public void receiveUpdatedUserInformation(@PathVariable String name, @RequestBody UserUpdateRequest userData, HttpServletRequest request, HttpServletResponse response){
+        var updatedUser = userService.updateAppUser(userData, name);
+        response.setHeader("Location", MessageFormat.format("/users/p/{0}", updatedUser.getUserName()));
+        response.setStatus(HttpStatus.CREATED.value());
     }
 }

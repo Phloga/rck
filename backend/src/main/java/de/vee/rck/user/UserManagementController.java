@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -25,23 +26,6 @@ public class UserManagementController {
     String sendUsersIndex()
     {
         return "user/index";
-    }
-
-
-    @PutMapping("/users/p/")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void receiveNewUserInformation(@RequestBody UserUpdateRequest userData, HttpServletRequest request, HttpServletResponse response){
-        var newUser = userService.updateAppUser(userData, userData.getUserName());
-        response.setHeader("Location", MessageFormat.format("/users/p/{0}", newUser.getUserName()));
-        response.setStatus(HttpStatus.CREATED.value());
-    }
-
-    @PostMapping("/users/p/{name}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void receiveUpdatedUserInformation(@PathVariable String name, @RequestBody UserUpdateRequest userData, HttpServletRequest request, HttpServletResponse response){
-        var updatedUser = userService.updateAppUser(userData, name);
-        response.setHeader("Location", MessageFormat.format("/users/p/{0}", updatedUser.getUserName()));
-        response.setStatus(HttpStatus.CREATED.value());
     }
 
 
@@ -63,5 +47,11 @@ public class UserManagementController {
         }
         response.setStatus(HttpStatus.FORBIDDEN.value());
         return null;
+    }
+
+    @GetMapping("/users/new")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ModelAndView sendNewUserPage(){
+        return new ModelAndView("user/editor", "user", "");
     }
 }

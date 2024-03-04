@@ -83,16 +83,17 @@ public class UserService {
         }
     }
 
+    /*
     @Transactional
     AppUser registerNewUser(AppUser user, boolean allowDuplicateEmail) throws UserCRUDError {
         boolean nameAvailable = false;
         boolean emailAvailable = false;
-        nameAvailable = userRepo.findByUserName(user.getUserName()) == null;
-        emailAvailable = allowDuplicateEmail || userRepo.findByEmail(user.getEmail()) == null;
+        nameAvailable = userRepo.findByUserName(user.getUserName()).isEmpty();
+        emailAvailable = allowDuplicateEmail || userRepo.findByEmail(user.getEmail()).isEmpty();
 
         if (!(nameAvailable && emailAvailable)){
             throw new UserCRUDError(!nameAvailable, !emailAvailable);
         }
         return userRepo.save(user);
-    }
+    }*/
 }
