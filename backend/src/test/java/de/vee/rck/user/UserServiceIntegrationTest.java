@@ -26,16 +26,16 @@ public class UserServiceIntegrationTest {
     @Test
     void createUser() {
         var testUser = new UserUpdateRequest();
-        testUser.setUserName("snorelax");
+        testUser.setUserName("tuff");
         testUser.setPassword("1234lol");
         testUser.setRoles(Arrays.asList("ROLE_USER"));
         testUser.setEmail("test@test.com");
         testUser.setEnabled(true);
         userService.createAppUser(testUser);
 
-        var loadedUser = userService.loadAppUserDetailsByName("snorelax");
+        var loadedUser = userService.loadAppUserDetailsByName("tuff");
         assertTrue(loadedUser.isPresent());
-        assertEquals("snorelax", loadedUser.get().getUserName());
+        assertEquals("tuff", loadedUser.get().getUserName());
         assertTrue(loadedUser.get().getRoles().contains("ROLE_USER"));
     }
 

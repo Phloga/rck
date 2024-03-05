@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.MOCK,
         classes = RecipeApplication.class)
-public class RecipeRepoTest {
+public class RecipeRepoIntegrationTest {
     // item ids from data.sql
     static final long itemIdSalt = 2;
     static final long itemIdSugar = 1;
@@ -41,7 +41,7 @@ public class RecipeRepoTest {
     }
     @Test
     @WithMockUser(value = "admin")
-    void findRecipes_testRequestChain(){
+    void testRequestChainFindRecipes(){
         var ingredients = itemRepo.findByIsBaseIngredient(true);
         assertFalse(ingredients.isEmpty());
         assertTrue(ingredients.stream().allMatch(Item::getIsBaseIngredient));
