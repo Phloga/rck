@@ -6,14 +6,15 @@ import {sendUser, fetchAllRoles} from '../serverSecuredApiMock'
 import NavBar from "./NavBar.vue"
 import * as yup from 'yup'
 
-//TODO load this information from data tag
-const user = ref({
-    userName : "",
-    password : "",
-    email: "",
-    roles: [],
-    enabled: false
-})
+const rolePrefix = "ROLE_"
+
+const userName = ref("")
+const userEmail = ref("")
+const userRoles = ref(new Set())
+userRoles.value.add("USER")
+const userEnabled = ref(false)
+
+const userRoleSelection = ref(null);
 
 const currentUserCard = ref({userName: "", roles: []})
 
@@ -23,18 +24,22 @@ const newPassword = ref("")
 
 const isNewUser = ref(true)
 
-const availableRols = ref([])
+const availableRoles = ref([])
 
 onMounted(() => {
     const value = document.getElementById("app").getAttribute("data-init")        
     if (value.length > 0) {
-        user.value = JSON.parse(document.getElementById("app").getAttribute("data-init"));
-        prevUserName.value = user.value.userName
+        const user = JSON.parse(document.getElementById("app").getAttribute("data-init"));
+        prevUserName.value = user.userName
         isNewUser.value = false;
+        userName.value = user.userName
+        userEmail.value = user.email
+        userEnabled.value = user.enabled
+        userRoles.value = new Set(user.roles.map(authName => authName.substring(rolePrefix.length)))
     }
     fetchAllRoles()
     .then(data => {
-        availableRols.value = data
+        availableRoles.value = data.map(authName => authName.substring(rolePrefix.length))
     })
     
     fetchActiveUser()
@@ -47,13 +52,22 @@ const emailRule = yup.string().email();
 
 const nameRule = yup.string().matches(/[a-zA-Z0-9]/);
 
+function removeRole(role){
+    userRoles.value.delete(role)
+}
+
+function addRole(){
+    userRoles.value.add(availableRoles.value[userRoleSelection.value.selectedIndex])
+}
+
+
 async function saveChanges() {
     const userDataUpdateRequest = {
-        userName : user.value.userName,
-        email: user.value.email,
-        roles: user.value.roles,
-        enabled: user.value.enabled,
-        password: isNewUser.value ? user.value.password : null
+        userName : userName.value,
+        email: userEmail.value,
+        roles: Array.from(userRoles.value).map(roleName => rolePrefix + roleName),
+        enabled: userEnabled.value,
+        password: isNewUser.value ? newPassword.value : null
     }
 
     const name = isNewUser.value ? userDataUpdateRequest.userName : prevUserName.value
@@ -68,7 +82,7 @@ async function saveChanges() {
 
 async function changePassword() {
     const userDataUpdateRequest = {
-        password: newPassword
+        password: newPassword.value
     }
     const response = await sendUser(userDataUpdateRequest, prevUserName.value)
     if (response.status == 201){
@@ -83,45 +97,51 @@ async function changePassword() {
 
 <template>
     <NavBar :userCard="currentUserCard"></NavBar>
-    <div class="card">
-    <Form @submit="saveChanges" class="single-column">
-        <div class="large-text">Benutzer Informationen</div>
-        <label for="user-name" class="label">User Name</label>
-        <Field name="user-name" id="user-name" v-model='user.userName' :rules="nameRule" class="borderless-field large-text"/>
-        <ErrorMessage as='div' name='user-name' class='note error'/>
-        <label for="email" class="label">Email</label>
-        <Field name="email" v-model="user.email" :rules="emailRule" class="borderless-field large-text"/>
-        <ErrorMessage as="div" name='email' class="note error"/>
-        <Field type="checkbox" id="user-enabled" name="enabled" v-model="user.enabled" class="round-corners inline"/>
-        <label for="user-enabled" class="label inline">Enabled</label>
+    <div class="card card--flex">
+        <Form @submit="saveChanges" class="single-column">
+            <div class="large-text">Benutzer Informationen Bearbeiten</div>
+            <div class="panel single-column">
+                <label for="user-name" class="label">User Name</label>
+                <Field name="user-name" id="user-name" v-model='userName' :rules="nameRule" class="borderless-field large-text"/>
+                <ErrorMessage as='div' name='user-name' class='note error'/>
+                <label for="email" class="label">Email</label>
+                <Field name="email" v-model="userEmail" :rules="emailRule" class="borderless-field large-text"/>
+                <ErrorMessage as="div" name='email' class="note error"/>
+                <input type="checkbox" id="user-enabled" name="enabled" v-model="userEnabled" class="round-corners inline"/>
+                <label for="user-enabled" class="label inline">Enabled</label>
+            </div>
+            <div class="panel">
+                <div>Benutzer Rollen</div>
+                <table class="item-table">
+                <tr v-for="role,i in userRoles" :key="i">
+                    <td class="row-label">{{role}}</td>
+                    <td>
+                        <button type="button" @click="removeRole(role)" class="round-corners control">
+                            <i class="icon-remove"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <select ref="userRoleSelection">
+                        <option v-for="role in availableRoles" :key="role">
+                            {{ role }}
+                        </option>
+                    </select>
+                    <button type="button" @click="addRole()" class="round-corners control">
+                        Hinzufügen
+                    </button>
+                </tr>
+                </table>
+            </div>
 
-        <table class="item-table">
-        <tr v-for="role,i in user.roles" :key="i">
-            <td class="row-label">{{role}}</td>
-            <td>
-                <button type="button" @click="removeRole(i)" class="round-corners control">
-                    <i class="icon-remove"></i>
-                </button>
-            </td>
-        </tr>
-        <tr>
-            <select>
-                <option v-for="role,i in availableRols" :key="i">
-                    {{ role }}
-                </option>
-            </select>
-            <button type="button" @click="addRole(i)" class="round-corners control">
-                Hinzufügen
-            </button>
-        </tr>
-        </table>
-
-        <Field v-if="isNewUser" name="password" id="password" v-model="user.password" placeholder="Neues Passwort" class="borderless-field large-text inline"/>
-        <button class="round-corners control">Speichern</button>
-    </Form>
+            <Field v-if="isNewUser" name="password" id="password" v-model="newPassword" placeholder="Neues Passwort" class="borderless-field large-text inline"/>
+            <button class="round-corners control">Speichern</button>
+        </Form>
     </div>
+
     <div class="card" v-if="!isNewUser">
         <Form @submit="changePassword" class="single-column">
+            <div class="large-text">Passwort</div>
             <Field name="password" id="password" v-model="newPassword" placeholder="Neues Passwort" class="borderless-field large-text inline"/>
             <button class="round-corners control inline">Password Ändern</button>
         </Form>
@@ -129,6 +149,22 @@ async function changePassword() {
 </template>
 
 <style>
+
+.card--flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.card .panel {
+    background: var(--color-bg-6);
+    margin: 8px;
+    padding: 4px;
+    box-shadow: 0 1px 3px 0 rgb(0, 0, 0), 0 1px 2px -1px rgb(0,0,0);
+}
+
 .single-column {
     columns: 1;
     margin: 0 8px 0 8px;
