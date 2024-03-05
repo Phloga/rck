@@ -24,7 +24,7 @@ public class UserApiController {
     private UserService userService;
 
     @GetMapping("/api/users/self")
-    public UserCard sendUserInformation(Authentication authentication, HttpServletResponse response){
+    public UserCard sendCurrentUserInformation(Authentication authentication, HttpServletResponse response){
         if (authentication == null || !authentication.isAuthenticated()) {
             return userService.anonymousUserCard();
         }
@@ -39,13 +39,11 @@ public class UserApiController {
 
     @GetMapping(path="/sec-api/users/p/{name}", produces="application/json")
     @PreAuthorize("isAuthenticated()")
-    UserQueryResponse sendSpecificUserInformation(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
+    UserQueryResponse sendUserInformation(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
         if (request.getUserPrincipal().getName().equals(name) || request.isUserInRole("ADMIN")){
             var user = userService.loadAppUserDetailsByName(name);
             if (user.isEmpty()){
-                //TODO may throw an exception here due to the inconsistent state
-                // of having an authenticated user without their name being in the data base
-                response.setStatus(500);
+                response.setStatus(HttpStatus.NOT_FOUND.value());
                 return null;
             }
             response.setHeader("Cache-Control", "private");

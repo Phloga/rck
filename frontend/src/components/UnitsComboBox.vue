@@ -48,7 +48,7 @@ function selectItem(index){
             <button v-for="unit,i in filteredUnitList" :key="i" @click="selectItem(i)">
                 {{ unit.name }} [{{ unit.symbol }}]
             </button>
-        </div> 
+        </div>
     </div>
 </template>
 

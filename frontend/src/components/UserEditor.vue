@@ -2,7 +2,7 @@
 import {onMounted, ref} from 'vue'
 import {Form, Field, ErrorMessage} from 'vee-validate'
 import {fetchActiveUser} from '../serverApi'
-import {sendUser} from '../serverSecuredApi'
+import {sendUser, fetchAllRoles} from '../serverSecuredApiMock'
 import NavBar from "./NavBar.vue"
 import * as yup from 'yup'
 
@@ -17,11 +17,13 @@ const user = ref({
 
 const currentUserCard = ref({userName: "", roles: []})
 
-const prevUserName = ref("");
+const prevUserName = ref("")
 
-const newPassword = ref("");
+const newPassword = ref("")
 
-const isNewUser = ref(true);
+const isNewUser = ref(true)
+
+const availableRols = ref([])
 
 onMounted(() => {
     const value = document.getElementById("app").getAttribute("data-init")        
@@ -30,10 +32,14 @@ onMounted(() => {
         prevUserName.value = user.value.userName
         isNewUser.value = false;
     }
+    fetchAllRoles()
+    .then(data => {
+        availableRols.value = data
+    })
+    
     fetchActiveUser()
     .then(data => { 
       currentUserCard.value = data})
-    .catch(error => console.error('Unable to get user information.', error)); //TODO replace this with an error message for the user 
 })
 
 
@@ -88,6 +94,28 @@ async function changePassword() {
         <ErrorMessage as="div" name='email' class="note error"/>
         <Field type="checkbox" id="user-enabled" name="enabled" v-model="user.enabled" class="round-corners inline"/>
         <label for="user-enabled" class="label inline">Enabled</label>
+
+        <table class="item-table">
+        <tr v-for="role,i in user.roles" :key="i">
+            <td class="row-label">{{role}}</td>
+            <td>
+                <button type="button" @click="removeRole(i)" class="round-corners control">
+                    <i class="icon-remove"></i>
+                </button>
+            </td>
+        </tr>
+        <tr>
+            <select>
+                <option v-for="role,i in availableRols" :key="i">
+                    {{ role }}
+                </option>
+            </select>
+            <button type="button" @click="addRole(i)" class="round-corners control">
+                Hinzufügen
+            </button>
+        </tr>
+        </table>
+
         <Field v-if="isNewUser" name="password" id="password" v-model="user.password" placeholder="Neues Passwort" class="borderless-field large-text inline"/>
         <button class="round-corners control">Speichern</button>
     </Form>
