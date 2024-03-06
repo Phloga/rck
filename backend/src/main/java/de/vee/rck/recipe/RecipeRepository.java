@@ -2,7 +2,6 @@ package de.vee.rck.recipe;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -24,4 +23,8 @@ public interface RecipeRepository extends CrudRepository<Recipe, Long> {
             "(SELECT recipe_id FROM recipe_line WHERE item_id IN (:itemIds))" +
             "GROUP BY recipe_id) matches INNER JOIN recipe ON recipe.id=recipe_id\n", nativeQuery = true)
     List<IngredientMatchingResult> findRecipesByIngredientIds(Collection<Long> itemIds);
+
+
+    @Query(value = "SELECT r from Recipe r where r.owner.id=:ownerId")
+    List<Recipe> findRecipesByOwnerId(Long ownerId);
 }

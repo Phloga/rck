@@ -1,0 +1,116 @@
+[
+  {
+    "name": "Schoko-Bannanen-Ecken",
+    "content": "{\"time\":1708871924270,\"blocks\":[{\"id\":\"3Iqtu8uPY5\",\"type\":\"paragraph\",\"data\":{\"text\":\"Alles in einer Rührschüssel zusammenschmeißen und dann Backen.<br>\"}},{\"id\":\"2qHWjgLUzZ\",\"type\":\"warning\",\"data\":{\"title\":\"Achtung\",\"message\":\"Der  Autor war Faul die Seite aus dem Kochbuch abzutippen und hat nur die Zutatenliste kopiert\"}}],\"version\":\"2.29.0\"}",
+    "ingredients": [
+      {
+        "itemId": null,
+        "itemName": "Banane",
+        "isOptional": false,
+        "unit": "pieces",
+        "amount": 1
+      },
+      {
+        "itemId": null,
+        "itemName": "Mehl",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 250
+      },
+      {
+        "itemId": null,
+        "itemName": "Backpulver",
+        "isOptional": false,
+        "unit": "teaspoon_uk",
+        "amount": 1
+      },
+      {
+        "itemId": null,
+        "itemName": "Kakao",
+        "isOptional": false,
+        "unit": "tablespoon_uk",
+        "amount": 2
+      },
+      {
+        "itemId": null,
+        "itemName": "Zucker",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 125
+      },
+      {
+        "itemId": null,
+        "itemName": "Vanille Zucker",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 8
+      },
+      {
+        "itemId": null,
+        "itemName": "Salz",
+        "isOptional": false,
+        "unit": "pinch",
+        "amount": 1
+      },
+      {
+        "itemId": null,
+        "itemName": "Butter",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 100
+      },
+      {
+        "itemId": null,
+        "itemName": "Puderzucker",
+        "isOptional": false,
+        "unit": "none",
+        "amount": 1
+      }
+    ],
+    "products" : [
+      {
+      "itemId": null,
+      "itemName": "Schoko-Bannanen-Ecken",
+      "isOptional": false,
+      "unit": "pieces",
+      "amount": 60
+      }
+    ]
+  },
+  {
+    "name": "Butter Plätzchen",
+    "content": "",
+    "ingredients": [
+      {
+        "itemId": null,
+        "itemName": "Mehl",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 500
+      },
+      {
+        "itemId": null,
+        "itemName": "Zucker",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 250
+      },
+      {
+        "itemId": null,
+        "itemName": "Butter",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 250
+      }
+    ],
+    "products": [
+      {
+        "itemId": null,
+        "itemName": "Butter Plätzchen",
+        "isOptional": false,
+        "unit": "none",
+        "amount": 0
+      }
+    ]
+  }
+]

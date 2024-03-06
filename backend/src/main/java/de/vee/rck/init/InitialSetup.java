@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.lang.Nullable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,15 +114,19 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
             userRepository.save(user);
         }
 
-        if (config.getUnitsLocation() != null && unitRepo.count() == 0) {
-            loadUnits(config.getUnitsLocation());
+
+        for (var init : config.getData()){
+            if (init.unitsLocation() != null && unitRepo.count() == 0) {
+                loadUnits(init.unitsLocation());
+            }
+            if (init.itemsLocation() != null && itemRepo.count() == 0){
+                loadIngredients(init.itemsLocation());
+            }
+            if (init.recipesLocation() != null && recipeRepo.count() == 0){
+                loadRecipes(init.recipesLocation(), init.importAs());
+            }
         }
-        if (config.getItemsLocation() != null && itemRepo.count() == 0){
-            loadIngredients(config.getItemsLocation());
-        }
-        if (config.getRecipesLocation() != null && recipeRepo.count() == 0){
-            loadRecipes(config.getRecipesLocation());
-        }
+
 
         setupComplete = true;
     }
@@ -179,13 +184,17 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
     }
 
     @Transactional
-    protected void loadRecipes(String recipesLocation) {
+    protected void loadRecipes(String recipesLocation, String importer) {
         try {
             String recipesJsonText = Utils.readResourceAsString(resLoader, recipesLocation);
             List<PackedRecipe> initialRecipes = jsonMapper.readValue(recipesJsonText,
                     jsonMapper.getTypeFactory().constructCollectionType(List.class, PackedRecipe.class));
+
+            var importerUser = importer != null ? userRepository.findByUserName(importer).orElseThrow() : null;
+
             for (PackedRecipe details : initialRecipes){
                 var recipe = recipeMapper.toRecipe(details, null);
+                recipe.setOwner(importerUser);
                 recipeRepo.save(recipe);
             }
         } catch (IOException ex){

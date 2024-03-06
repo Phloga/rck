@@ -32,9 +32,7 @@ public class UserManagementController {
         if (request.getUserPrincipal().getName().equals(name) || request.isUserInRole("ADMIN")){
             var user = userService.loadAppUserDetailsByName(name);
             if (user.isEmpty()){
-                //TODO may throw an exception here due to the inconsistent state
-                // of having an authenticated user without their name being in the data base
-                response.setStatus(500);
+                response.setStatus(HttpStatus.NOT_FOUND.value());
                 return null;
             }
             //response.setHeader("Cache-Control", "private");

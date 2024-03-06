@@ -36,6 +36,10 @@ logging:
           nodeValue: DEBUG
 rck:
   init:
-    recipes-location: "classpath:data/default-recipes.json"
-    units-location: "classpath:data/default-units.json"
-    items-location: "classpath:data/default-items.json"
+    data: [
+      {
+        recipes-location: "classpath:data/default-recipes.json",
+        units-location: "classpath:data/default-units.json",
+        items-location: "classpath:data/default-items.json",
+      }
+    ]

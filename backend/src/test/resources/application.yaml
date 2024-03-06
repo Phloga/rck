@@ -6,13 +6,16 @@ spring:
     resources:
       static-locations: classpath:/assets/
   datasource:
-    url: "jdbc:h2:mem:rck;DB_CLOSE_DELAY=-1;NON_KEYWORDS=KEY,VALUE"
+    url: "jdbc:h2:mem:rck;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
     driverClassName: "org.h2.Driver"
     username: "sa"
     password: ""
   jpa:
     open-in-view: no
-    defer-datasource-initialization: yes
+    show-sql: yes
+    properties:
+      hibernate:
+        format_sql: yes
   mvc:
     log-request-details: true
     static-path-pattern: /assets/**
@@ -35,6 +38,16 @@ logging:
           filter:
             CommonsRequestLoggingFilter: DEBUG
           nodeValue: DEBUG
-hibernate:
-  hbm2ddl:
-    auto: create
+rck:
+  init:
+    data: [
+      {
+        recipes-location: "classpath:data/test-recipes.json",
+        units-location: "classpath:data/test-units.json",
+        items-location: "classpath:data/test-items.json"
+      },
+      {
+        recipes-location: "classpath:data/test-recipes-admin.json",
+        import-as: "Admin"
+      }
+    ]

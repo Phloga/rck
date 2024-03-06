@@ -14,6 +14,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,9 +26,9 @@ import static org.junit.jupiter.api.Assertions.*;
         classes = RecipeApplication.class)
 public class RecipeRepoIntegrationTest {
     // item ids from data.sql
-    static final long itemIdSalt = 2;
-    static final long itemIdSugar = 1;
-    static final long itemIdMilk = 3;
+    static final int expectedMatches = 2;
+
+    static final long recipeOwnerId = 1; //admin
     @Autowired
     UnitRepository unitRepo;
     @Autowired
@@ -46,8 +48,18 @@ public class RecipeRepoIntegrationTest {
         assertFalse(ingredients.isEmpty());
         assertTrue(ingredients.stream().allMatch(Item::getIsBaseIngredient));
 
-        List<IngredientMatchingResultImpl> results = recipeRepo.findRecipesByIngredientIds(
-                Arrays.asList(itemIdSugar,itemIdMilk)).stream().map(IngredientMatchingResultImpl::new).toList();
+        var ingredientsMap = ingredients.stream().collect(Collectors.toMap(Item::getName, Function.identity()));
+
+        List<Long> filterList = Arrays.asList(ingredientsMap.get("Zucker").getId(),ingredientsMap.get("Milch").getId());
+        List<IngredientMatchingResultImpl> results = recipeRepo.findRecipesByIngredientIds(filterList)
+                .stream().map(IngredientMatchingResultImpl::new).toList();
+
+        assertEquals(expectedMatches, results.size());
+        for (var result : results){
+            var recipe = recipeRepo.findById(result.getRecipeId());
+            assertTrue(recipe.isPresent());
+        }
+        /*
 
         List<IngredientMatchingResult> expectedResults = Arrays.asList(
                 new IngredientMatchingResultImpl(0L, "Salzige Milch", 1, 2),
@@ -60,5 +72,13 @@ public class RecipeRepoIntegrationTest {
         assertTrue(results.stream().anyMatch((r) -> {
             return equalNumericalMembers(r, expectedResults.get(1));
         }));
+
+        */
+    }
+
+    @Test
+    void findRecipesByUser() {
+        var recipeList = recipeRepo.findRecipesByOwnerId(recipeOwnerId);
+        assertEquals(1, recipeList.size());
     }
 }

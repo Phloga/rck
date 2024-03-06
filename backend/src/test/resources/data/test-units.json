@@ -1,0 +1,80 @@
+[
+  {
+    "name": "none",
+    "symbol" : "",
+    "type": "NONE",
+    "baseConversionMultiplier": 1.0
+  },
+  {
+    "name": "pieces",
+    "symbol" : "",
+    "type": "COUNT",
+    "baseConversionMultiplier": 1.0
+  },
+  {
+    "name": "portion",
+    "symbol" : "",
+    "type": "COUNT",
+    "baseConversionMultiplier": 1.0
+  },
+  {
+    "name": "cloves",
+    "symbol" : "",
+    "type": "COUNT",
+    "baseConversionMultiplier": 1.0
+  },
+  {
+    "name": "gram",
+    "symbol" : "g",
+    "type": "MASS",
+    "baseConversionMultiplier": 1.0
+  },
+  {
+    "name": "centimeter",
+    "symbol" : "cm",
+    "type": "LENGTH",
+    "baseConversionMultiplier": 1.0
+  },
+  {
+    "name": "second",
+    "symbol" : "s",
+    "type": "TIME",
+    "baseConversionMultiplier": 1.0
+  },
+  {
+    "name": "kilogram",
+    "symbol" : "kg",
+    "type": "MASS",
+    "baseConversionMultiplier": 1000.0
+  },
+  {
+    "name": "litre",
+    "symbol" : "l",
+    "type": "VOLUME",
+    "baseConversionMultiplier": 1000.0
+  },
+  {
+    "name": "millilitre",
+    "symbol" : "ml",
+    "type": "VOLUME",
+    "baseConversionMultiplier": 1.0
+  },
+  {
+    "name": "teaspoon_uk",
+    "symbol" : "tsp",
+    "type": "VOLUME",
+    "baseConversionMultiplier": 5.919388
+  },
+  {
+    "name": "tablespoon_uk",
+    "symbol" : "tbsp",
+    "type": "VOLUME",
+    "baseConversionMultiplier": 17.75816
+  },
+  {
+    "name": "pinch",
+    "symbol" : "",
+    "type": "VOLUME",
+    "baseConversionMultiplier": 0.308058
+  }
+]

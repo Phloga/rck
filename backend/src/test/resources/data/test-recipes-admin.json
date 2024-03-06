@@ -1,0 +1,66 @@
+[
+  {
+  "name": "Spaghetti Bolognese",
+  "content": "",
+  "ingredients": [
+    {
+      "itemId": null,
+      "itemName": "Zwiebel",
+      "isOptional": false,
+      "unit": "none",
+      "amount": 1
+    },
+    {
+      "itemId": null,
+      "itemName": "Karotte",
+      "isOptional": false,
+      "unit": "none",
+      "amount": 1
+    },
+    {
+      "itemId": null,
+      "itemName": "Knoblauch",
+      "isOptional": false,
+      "unit": "cloves",
+      "amount": 2
+    },
+    {
+      "itemId": null,
+      "itemName": "Sonnenblumen Öl",
+      "isOptional": false,
+      "unit": "none",
+      "amount": 2
+    },
+    {
+      "itemId": null,
+      "itemName": "Staudensellerie",
+      "isOptional": false,
+      "unit": "gram",
+      "amount": 50
+    },
+    {
+      "itemId": null,
+      "itemName": "Rinderhackfleisch",
+      "isOptional": false,
+      "unit": "gram",
+      "amount": 250
+    },
+    {
+      "itemId": null,
+      "itemName": "Spaghetti",
+      "isOptional": false,
+      "unit": "gram",
+      "amount": 200
+    }
+  ],
+  "products": [
+    {
+      "itemId": null,
+      "itemName": "Spaghetti Bolognese",
+      "isOptional": false,
+      "unit": "portion",
+      "amount": 2
+    }
+  ]
+  }
+]

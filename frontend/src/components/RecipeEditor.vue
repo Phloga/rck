@@ -9,7 +9,7 @@ import {fetchActiveUser, fetchCommonIngredients, fetchUnitList} from "../serverA
 
 import {Form,Field, ErrorMessage} from "vee-validate"
 
-import {ref, onMounted, useAttrs } from 'vue'
+import {ref, onMounted } from 'vue'
 
 import * as yup from 'yup'
 
