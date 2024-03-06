@@ -42,11 +42,18 @@ const validateTitle = yup.string().required();
 var editor
 const submitTarget = ref("/recipe/newRecipe")
 
+function fixRemainingItems(){
+  ingredients.value.forEach(element => {
+      remainingItems.value.delete(element.itemId)
+    });
+}
+
 function setupEditor(recipeObj){
   if (recipeObj != null){
     recipeName.value = recipeObj.name;
     ingredients.value = recipeObj.ingredients;
     products.value = recipeObj.products;
+    fixRemainingItems()
   }
 
   editor = new EditorJS({
@@ -147,6 +154,7 @@ onMounted(() => {
     .then(data => { 
       availableItems.value = new Map(data.map(rsp => [rsp.id, rsp]))
       remainingItems.value = new Map(availableItems.value)
+      fixRemainingItems()
     })
     .catch(error => console.error('Unable to get items.', error)); //TODO replace this with an error message for the user 
 
@@ -174,7 +182,7 @@ onMounted(() => {
 
 <template>
     <NavBar :userCard="currentUserCard"></NavBar>
-    <h1><span class="block">Rezepte Editor</span></h1>
+    <header>    <h1><span class="block">Rezepte Editor</span></h1></header>
     <main>
     <Form @submit="saveRecipe">
       <br>

@@ -21,7 +21,7 @@ const userLink = computed(() => '/users/u/'+ props.userCard.userName)
 
 <template>
     <nav class="nav-list">
-        <a v-if="userCard.roles.length > 0" href="/recipe/newRecipe">Rezept Erstellen</a>
+        <a v-if="userCard.roles.length > 0" href="/recipe/new">Rezept Erstellen</a>
         <div v-if="userCard.roles.includes('ROLE_ADMIN')" href="#" class="dropdown">
             <button>Admin Tools</button>
             <div class="dropdown__content">

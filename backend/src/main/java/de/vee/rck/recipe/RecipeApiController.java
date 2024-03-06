@@ -29,7 +29,7 @@ public class RecipeApiController {
     }
 
 
-    @GetMapping(path="/api/recipes/e/{id}",produces="application/json")
+    @GetMapping(path="/api/recipes/d/{id}",produces="application/json")
     RecipeQueryResponse sendRecipe(@PathVariable("id") Long recipeId){
         var recipe = recipeRepo.findById(recipeId).orElseThrow();
         return new RecipeQueryResponse(recipeMapper.toPackedRecipe(recipe), recipe.getOwner().getUserName());

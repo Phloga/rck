@@ -2,7 +2,7 @@
 import {onMounted, ref} from 'vue'
 import {Form, Field, ErrorMessage} from 'vee-validate'
 import {fetchActiveUser} from '../serverApi'
-import {sendUser, fetchAllRoles} from '../serverSecuredApiMock'
+import {sendUser, fetchAllRoles} from '../serverSecuredApi'
 import NavBar from "./NavBar.vue"
 import * as yup from 'yup'
 
@@ -97,49 +97,52 @@ async function changePassword() {
 
 <template>
     <NavBar :userCard="currentUserCard"></NavBar>
-    <div class="card card--flex">
-        <Form @submit="saveChanges" class="single-column">
-            <div class="large-text">Benutzer Informationen Bearbeiten</div>
-            <div class="panel single-column">
-                <label for="user-name" class="label">User Name</label>
-                <Field name="user-name" id="user-name" v-model='userName' :rules="nameRule" class="borderless-field large-text"/>
-                <ErrorMessage as='div' name='user-name' class='note error'/>
-                <label for="email" class="label">Email</label>
-                <Field name="email" v-model="userEmail" :rules="emailRule" class="borderless-field large-text"/>
-                <ErrorMessage as="div" name='email' class="note error"/>
-                <input type="checkbox" id="user-enabled" name="enabled" v-model="userEnabled" class="round-corners inline"/>
-                <label for="user-enabled" class="label inline">Enabled</label>
-            </div>
-            <div class="panel">
-                <div>Benutzer Rollen</div>
-                <table class="item-table">
-                <tr v-for="role,i in userRoles" :key="i">
-                    <td class="row-label">{{role}}</td>
-                    <td>
-                        <button type="button" @click="removeRole(role)" class="round-corners control">
-                            <i class="icon-remove"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <select ref="userRoleSelection">
-                        <option v-for="role in availableRoles" :key="role">
-                            {{ role }}
-                        </option>
-                    </select>
-                    <button type="button" @click="addRole()" class="round-corners control">
-                        Hinzufügen
-                    </button>
-                </tr>
-                </table>
-            </div>
+    <div class="panel">
+        <div class="large-text">Benutzer Informationen Bearbeiten</div>
+        <Form @submit="saveChanges">
+            <div class="panel_body--flex">
+                <div class="card single-column">
+                    <label for="user-name" class="label">User Name</label>
+                    <Field name="user-name" id="user-name" v-model='userName' :rules="nameRule" class="borderless-field large-text"/>
+                    <ErrorMessage as='div' name='user-name' class='note error'/>
+                    <label for="email" class="label">Email</label>
+                    <Field name="email" v-model="userEmail" :rules="emailRule" class="borderless-field large-text"/>
+                    <ErrorMessage as="div" name='email' class="note error"/>
+                    <input type="checkbox" id="user-enabled" name="enabled" v-model="userEnabled" class="round-corners inline"/>
+                    <label for="user-enabled" class="label inline">Enabled</label>
+                </div>
+                <div class="card">
+                    <div>Rollen</div>
+                    <table class="item-table">
+                        <tr v-for="role,i in userRoles" :key="i" class="role_card">
+                            <td class="row-label">{{role}}</td>
+                            <td>
+                                <button type="button" @click="removeRole(role)" class="round-corners control">
+                                <i class="icon-remove"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <select ref="userRoleSelection" class="round-corners">
+                                <option v-for="role in availableRoles" :key="role">{{ role }}</option>
+                            </select>
+                            <button type="button" @click="addRole()" class="round-corners control">Hinzufügen</button>
+                        </tr>
+                    </table>
+                </div>
 
-            <Field v-if="isNewUser" name="password" id="password" v-model="newPassword" placeholder="Neues Passwort" class="borderless-field large-text inline"/>
-            <button class="round-corners control">Speichern</button>
+                <Field v-if="isNewUser" name="password" id="password" v-model="newPassword" placeholder="Neues Passwort" class="borderless-field large-text inline"/>
+
+            
+            </div>
+            <div class="panel_footer">
+                <button class="round-corners control">Speichern</button>
+            </div>
         </Form>
     </div>
 
-    <div class="card" v-if="!isNewUser">
+
+    <div class="panel" v-if="!isNewUser">
         <Form @submit="changePassword" class="single-column">
             <div class="large-text">Passwort</div>
             <Field name="password" id="password" v-model="newPassword" placeholder="Neues Passwort" class="borderless-field large-text inline"/>
@@ -150,7 +153,8 @@ async function changePassword() {
 
 <style>
 
-.card--flex {
+
+.panel_body--flex {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -158,12 +162,27 @@ async function changePassword() {
   align-items: flex-start;
 }
 
-.card .panel {
-    background: var(--color-bg-6);
+.role_card {
+    background: var(--color-bg-4);
     margin: 8px;
     padding: 4px;
     box-shadow: 0 1px 3px 0 rgb(0, 0, 0), 0 1px 2px -1px rgb(0,0,0);
 }
+
+.panel_footer {
+    background: var(--color-bg-3);
+
+}
+
+.panel .card {
+    background: var(--color-bg-6);
+    margin: 8px;
+    padding: 4px;
+}
+
+.panel button {
+    margin: 2px 8px 2px 8px;
+} 
 
 .single-column {
     columns: 1;
@@ -186,5 +205,6 @@ async function changePassword() {
 .small-font {
     font-size: 0.7em;
 }
+
 
 </style>

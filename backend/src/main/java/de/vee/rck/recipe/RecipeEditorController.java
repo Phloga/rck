@@ -24,18 +24,20 @@ import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping("/recipes")
+@RequestMapping("/recipe")
 public class RecipeEditorController {
 
     private RecipeService recipeService;
 
     private static final String recipeUriPrefix = "/recipe/d";
 
+    private static final String recipeEditorPathPattern = "/recipe/d/{0}/editor";
+
     @GetMapping("/new")
     String openRecipeEditor(Model model){
         return "recipeEditor";
     }
-    @GetMapping("/e/{id}")
+    @GetMapping("/d/{id}")
     ModelAndView openRecipe(@PathVariable("id") Long recipeId) throws JsonProcessingException {
         ObjectMapper jsonMapper = new ObjectMapper();
         ModelMap modelMap = new ModelMap();
@@ -46,7 +48,7 @@ public class RecipeEditorController {
     }
 
     @PreAuthorize("hasAuthority('MODIFY_RECIPE')")
-    @GetMapping("/e/{id}/editor")
+    @GetMapping("/d/{id}/editor")
     ModelAndView editRecipe(@PathVariable("id") Long recipeId) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         ModelMap modelMap = new ModelMap();
@@ -66,17 +68,19 @@ public class RecipeEditorController {
     ResponseEntity<String> createRecipe(@RequestBody PackedRecipe recipe, Authentication authentication) {
         Recipe recipeEntity = recipeService.updateRecipe(recipe, null, authentication.getName(), false);
         //respond with 201, put link to created resource in location header
-        URI location = URI.create(MessageFormat.format("/recipe/e/{0}/edit", recipeEntity.getId()));
+        URI location = URI.create(MessageFormat.format(recipeEditorPathPattern, recipeEntity.getId()));
         return ResponseEntity.created(location).build();
     }
 
 
     @PreAuthorize("hasAuthority('MODIFY_RECIPE')")
-    @PostMapping("/e/{id}")
-    void saveRecipe(@PathVariable("id") Long recipeId, @RequestBody PackedRecipe recipe,
+    @PostMapping("/d/{id}")
+    ResponseEntity<String> saveRecipe(@PathVariable("id") Long recipeId, @RequestBody PackedRecipe recipe,
                     Authentication authentication)
     {
         boolean skipChecks = authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        recipeService.updateRecipe(recipe, recipeId, authentication.getName(), skipChecks);
+        Recipe recipeEntity = recipeService.updateRecipe(recipe, recipeId, authentication.getName(), skipChecks);
+        URI location = URI.create(MessageFormat.format(recipeEditorPathPattern, recipeEntity.getId()));
+        return ResponseEntity.created(location).build();
     }
 }

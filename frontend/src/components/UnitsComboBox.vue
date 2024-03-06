@@ -44,7 +44,7 @@ function selectItem(index){
 <template>
     <div ref="dropdownRoot" @focusin="openDropdown">
         <input type="text" :value="props.modelValue" @input="emit('update:modelValue', $event.target.value)" placeholder="Einheit" class="borderless-field">
-        <div v-show="isOpen" class="dropdown">
+        <div v-show="isOpen" class="units-dropdown">
             <button v-for="unit,i in filteredUnitList" :key="i" @click="selectItem(i)">
                 {{ unit.name }} [{{ unit.symbol }}]
             </button>
@@ -53,13 +53,13 @@ function selectItem(index){
 </template>
 
 <style>
-    .dropdown {
+    .units-dropdown {
     position: absolute;
     z-index: 100;
     border: 1px solid var(--color-border);
     }
 
-    .dropdown > button {
+    .units-dropdown > button {
     background-color: var(--color-background-item);
     color: var(--color-button-text);
     display: block;
@@ -67,7 +67,7 @@ function selectItem(index){
     text-decoration: none;
     }
 
-    .dropdown > a:hover {
+    .units-dropdown > a:hover {
     background-color: var(--color-button-hover);
     display: block;
     }

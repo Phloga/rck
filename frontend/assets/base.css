@@ -49,10 +49,13 @@
     --color-heading: var(--vt-c-text-dark-1);
     --color-divider: hsl(205, 75%, 97%);
 
+    --color-bg-3:  hsl(253, 13%, 28%);
     --color-bg-4:  hsl(254, 14%, 23%);
     --color-bg-5:  hsl(264, 11%, 18%);
     --color-bg-6:  hsl(270, 6%, 14%);
     --color-bg-7:  hsl(270, 4%, 11%);
+
+    --color-fg-1:  hsl(183, 28%, 87%);
   }
 }
 
