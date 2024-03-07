@@ -39,4 +39,10 @@ public class UserServiceIntegrationTest {
         assertTrue(loadedUser.get().getRoles().contains("ROLE_USER"));
     }
 
+    @Test
+    void checkAdmin() {
+        // check for the default admin
+        assertTrue(userService.anyAdminExists());
+    }
+
 }

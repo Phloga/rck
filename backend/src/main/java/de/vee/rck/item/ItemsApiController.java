@@ -2,7 +2,10 @@ package de.vee.rck.item;
 
 import de.vee.rck.item.dto.ItemDTO;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -17,6 +20,8 @@ public class ItemsApiController {
 
     ItemMapper itemMapper;
     ItemRepository itemRepo;
+
+    private static final Logger logger = LoggerFactory.getLogger(ItemsApiController.class);
 
     @PreAuthorize("hasAuthority('LIST_ALL')")
     @GetMapping(path="/api/items/all", produces="application/json")
@@ -36,15 +41,20 @@ public class ItemsApiController {
 
     @PreAuthorize("hasAuthority('MODIFY_ITEM')")
     @PostMapping(path="/api/items/modified")
-    public void changeItem(@RequestBody List<ItemDTO> itemDetails){
-        itemRepo.saveAll(itemMapper.itemDTOToItem(itemDetails));
+    public void changeItem(@RequestBody List<ItemDTO> itemDetails, Authentication authentication){
+        var iterator = itemRepo.saveAll(itemMapper.itemDTOToItem(itemDetails));
+        var affectedItemIds = StreamSupport.stream(iterator.spliterator(), false)
+                .map(item -> item.getId().toString())
+                .collect(Collectors.joining());
+        logger.info("{} changed/added item definitions for item {}", authentication.getName(), affectedItemIds);
     }
 
     @PreAuthorize("hasAuthority('REMOVE_ITEM')")
     @DeleteMapping(path="/api/item/{id}")
-    public void removeItem(@PathVariable Long id){
+    public void removeItem(@PathVariable Long id, Authentication authentication){
         itemRepo.findById(id).ifPresent((item) -> {
             itemRepo.delete(item);
+            logger.info("{} removed item {}", authentication.getName(), id);
         });
     }
 

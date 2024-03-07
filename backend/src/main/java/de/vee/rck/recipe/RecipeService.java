@@ -9,6 +9,8 @@ import de.vee.rck.user.AppUser;
 import de.vee.rck.user.AppUserRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,7 @@ public class RecipeService {
         return itemRepo.findByIsBaseIngredient(true);
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(RecipeService.class);
 
     // Transactional is important else there is a LazyInitializationException due to closed hibernate session
     @Transactional
@@ -58,7 +61,9 @@ public class RecipeService {
                 Recipe recipeEntity = recipeMapper.toRecipe(updatedRecipe, recipeId, true, true);
                 recipeEntity.setId(recipeId);
                 recipeEntity.setOwner(owner);
-                return recipeRepo.save(recipeEntity);
+                var ret = recipeRepo.save(recipeEntity);
+                logger.info("{} updated recipe {}", userName, recipeId);
+                return ret;
             }
             throw new RecipeAccessError(MessageFormat.format(
                     "Unauthorized attempt to update the recipe with id: {0}",recipeId));
@@ -66,7 +71,9 @@ public class RecipeService {
             Recipe recipeEntity = recipeMapper.toRecipe(updatedRecipe, null, true, true);
             AppUser user = userRepository.findByUserName(userName).orElseThrow();
             recipeEntity.setOwner(user);
-            return recipeRepo.save(recipeEntity);
+            var ret = recipeRepo.save(recipeEntity);
+            logger.info("{} created recipe {}", userName, ret.getId());
+            return ret;
         }
     }
 }

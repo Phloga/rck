@@ -6,6 +6,8 @@ import de.vee.rck.recipe.dto.PackedRecipe;
 import de.vee.rck.recipe.dto.RecipeDetails;
 import de.vee.rck.units.dto.UnitDetails;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +34,7 @@ public class RecipeEditorController {
     private static final String recipeUriPrefix = "/recipe/d";
 
     private static final String recipeEditorPathPattern = "/recipe/d/{0}/editor";
+
 
     @GetMapping("/new")
     String openRecipeEditor(Model model){
@@ -64,7 +67,7 @@ public class RecipeEditorController {
      * @param authentication
      */
     @PreAuthorize("hasAuthority('MODIFY_RECIPE')")
-    @PostMapping("/new")
+    @PutMapping("/new")
     ResponseEntity<String> createRecipe(@RequestBody PackedRecipe recipe, Authentication authentication) {
         Recipe recipeEntity = recipeService.updateRecipe(recipe, null, authentication.getName(), false);
         //respond with 201, put link to created resource in location header
@@ -74,7 +77,7 @@ public class RecipeEditorController {
 
 
     @PreAuthorize("hasAuthority('MODIFY_RECIPE')")
-    @PostMapping("/d/{id}")
+    @PutMapping("/d/{id}")
     ResponseEntity<String> saveRecipe(@PathVariable("id") Long recipeId, @RequestBody PackedRecipe recipe,
                     Authentication authentication)
     {

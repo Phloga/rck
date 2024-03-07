@@ -6,7 +6,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.MessageFormat;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
@@ -34,12 +33,6 @@ public class UserService {
                 .toList();
     }
 
-    @Transactional
-    public Optional<UserQueryResponse> loadAppUserDetails(Long id){
-        var user = userRepo.findById(id);
-        return user.map(appUser -> userMapper.appUserToUserQueryResponse(appUser));
-    }
-
     public UserCard anonymousUserCard(){
         if (anonymousUser == null){
             anonymousUser = new UserQueryResponse("anonymous", "", new ArrayList<>(), false);
@@ -53,6 +46,17 @@ public class UserService {
         return user.map(appUser -> userMapper.appUserToUserQueryResponse(appUser));
     }
 
+    @Transactional
+    public Optional<AppUser> findUserByName(String name){
+        return userRepo.findByUserName(name);
+    }
+
+    /// check whether a user with role admin exists
+    public boolean anyAdminExists(){
+        var adminRole = userRoleRepo.findByName("ROLE_ADMIN");
+        return userRepo.countByRole(adminRole.getId()) > 0;
+    }
+
     public AppUser createAppUser(UserUpdateRequest user) {
         if (user.getUserName() == null)
             throw new IllegalArgumentException("Attempted to create user without name");
@@ -63,6 +67,20 @@ public class UserService {
         AppUser newUser = new AppUser();
         userMapper.updateAppUserFromAppUserDetails(newUser, user, user.getPassword());
         return userRepo.save(newUser);
+    }
+
+    /**
+     * Business logic for a password reset
+     * @return true if successful
+     */
+    @Transactional
+    public boolean updatePassword(String userName, String oldPassword, String newPassword){
+        var user = userRepo.findByUserName(userName).orElseThrow();
+        if (passwordEncoder.matches(oldPassword, user.getPassword())){
+            user.setPassword(passwordEncoder.encode(newPassword));
+            return true;
+        }
+        return false;
     }
 
     @Transactional

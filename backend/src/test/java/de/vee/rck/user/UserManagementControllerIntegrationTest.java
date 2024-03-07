@@ -28,7 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = RecipeApplication.class)
 public class UserManagementControllerIntegrationTest {
 
-    static final String usersSite = "/users/index";
+    static final String usersSite = "/user/index";
+    static final String userSitePrefix = "/user/p/";
+
 
     @Autowired
     MockMvc mvc;
@@ -52,5 +54,15 @@ public class UserManagementControllerIntegrationTest {
                         .with(user("snorlax").roles("USER")))
                 .andExpect(
                         status().is4xxClientError());
+    }
+
+
+    @Test
+    void getOwnUserPage_asUser_thenSuccess() throws Exception {
+        mvc
+                .perform(get(userSitePrefix + "snorlax")
+                        .with(user("snorlax").roles("USER")))
+                .andExpect(
+                        status().is2xxSuccessful());
     }
 }

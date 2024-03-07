@@ -18,7 +18,7 @@ public class UserManagementController {
 
     private UserService userService;
 
-    @GetMapping("/users/index")
+    @GetMapping("/user/index")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     String sendUsersIndex()
     {
@@ -26,7 +26,7 @@ public class UserManagementController {
     }
 
 
-    @GetMapping("/users/p/{name}")
+    @GetMapping("/user/p/{name}")
     @PreAuthorize("isAuthenticated()")
     ModelAndView sendUserPage(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) throws JsonProcessingException {
         if (request.getUserPrincipal().getName().equals(name) || request.isUserInRole("ADMIN")){
@@ -44,7 +44,7 @@ public class UserManagementController {
         return null;
     }
 
-    @GetMapping("/users/new")
+    @GetMapping("/user/new")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ModelAndView sendNewUserPage(){
         return new ModelAndView("user/editor", "user", "");

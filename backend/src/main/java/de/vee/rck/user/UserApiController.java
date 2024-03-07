@@ -1,17 +1,17 @@
 package de.vee.rck.user;
 
-import de.vee.rck.user.dto.UserQueryResponse;
-import de.vee.rck.user.dto.AppUserPreview;
-import de.vee.rck.user.dto.UserCard;
-import de.vee.rck.user.dto.UserUpdateRequest;
+import de.vee.rck.user.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -23,7 +23,7 @@ public class UserApiController {
 
     private UserService userService;
 
-    @GetMapping("/api/users/self")
+    @GetMapping("/api/user/self")
     public UserCard sendCurrentUserInformation(Authentication authentication, HttpServletResponse response){
         if (authentication == null || !authentication.isAuthenticated()) {
             return userService.anonymousUserCard();
@@ -37,7 +37,16 @@ public class UserApiController {
         return null;
     }
 
-    @GetMapping(path="/sec-api/users/p/{name}", produces="application/json")
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/api/user/new-password")
+    public void updateUserPassword(@RequestBody PasswordReplaceRequest request, Authentication auth) {
+        boolean success = userService.updatePassword(auth.getName(), request.getCurrentPassword(), request.getNewPassword());
+        if (!success){
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "wrong password");
+        }
+    }
+
+    @GetMapping(path="/sec-api/user/p/{name}", produces="application/json")
     @PreAuthorize("isAuthenticated()")
     UserQueryResponse sendUserInformation(@PathVariable String name, HttpServletRequest request, HttpServletResponse response) {
         if (request.getUserPrincipal().getName().equals(name) || request.isUserInRole("ADMIN")){
@@ -53,14 +62,14 @@ public class UserApiController {
         return null;
     }
 
-    @GetMapping(path="/sec-api/users/all", produces="application/json")
+    @GetMapping(path="/sec-api/user/all", produces="application/json")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     Collection<AppUserPreview> sendAllUsers(){
         return userService.collectAllUsers();
     }
 
 
-    @GetMapping(path="/sec-api/users/roles/all", produces="application/json")
+    @GetMapping(path="/sec-api/user/roles/all", produces="application/json")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     Collection<String> sendAllRoles() {
         return userService.availableUserRoles();
@@ -75,7 +84,7 @@ public class UserApiController {
         response.setStatus(HttpStatus.CREATED.value());
     }*/
 
-    @PutMapping("/sec-api/users/p/{name}")
+    @PutMapping("/sec-api/user/p/{name}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void receiveUpdatedUserInformation(@PathVariable String name, @RequestBody UserUpdateRequest userData, HttpServletRequest request, HttpServletResponse response){
         var updatedUser = userService.updateAppUser(userData, name);

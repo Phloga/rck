@@ -19,6 +19,7 @@ public class UserRole {
     private Long id;
 
     private String name;
+
     @ManyToMany(mappedBy = "roles")
     private Collection<AppUser> users;
 
