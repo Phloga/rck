@@ -20,19 +20,8 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 @NoArgsConstructor
 public class HomePageController {
-    Logger logger = LoggerFactory.getLogger(HomePageController.class);;
-
-    /*
-    @GetMapping("/")
-    public RedirectView indexRedirect() {
-        return new RedirectView(rootRedirect);
-    }*/
-
     @GetMapping("/")
     public String index(HttpServletRequest request) {
-        //CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
-        //logger.info("{}={}", token.getHeaderName(), token.getToken());
-
         return "index";
     }
 }

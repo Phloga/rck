@@ -37,13 +37,11 @@ import java.text.MessageFormat;
 import java.util.*;
 
 @Component
-@RequiredArgsConstructor
 public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> {
     private static final String defaultIngredientsLocation = "classpath:data/default-ingredients.json";
     private static final String defaultRecipesLocation = "classpath:data/default-recipes.json";
     private static final String defaultUnitsLocation = "classpath:data/default-units.json";
-
-    private final Logger logger;
+    private static final Logger logger = LoggerFactory.getLogger(InitialSetup.class);
     @Autowired
     private RecipeApplicationInitializationConfiguration config;
     @Autowired
@@ -75,7 +73,6 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
 
     public InitialSetup(){
         this.setupComplete = false;
-        this.logger = LoggerFactory.getLogger(InitialSetup.class);
         this.jsonMapper = new ObjectMapper();
     }
 
@@ -111,7 +108,8 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
             user.setEmail("owo@weeb.de");
             user.setRoles(Arrays.asList(adminRole));
             user.setEnabled(true);
-            userRepository.save(user);
+            user = userRepository.save(user);
+            logger.info("Added default user {} to the database", user.getUserName());
         }
 
 
@@ -163,6 +161,7 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
                     jsonMapper.getTypeFactory().constructCollectionType(List.class, UnitDetails.class));
             List<Unit> initialUnits = unitMapper.unitDetailsToUnit(initialUnitDetails);
             unitRepo.saveAll(initialUnits);
+            logger.info("Imported unit definitions from {}", unitsLocation);
         } catch (IOException ex){
             logger.error(MessageFormat.format("Failed to load units from {0}!", unitsLocation));
             logger.error(ex.getMessage());
@@ -177,6 +176,7 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
                     jsonMapper.getTypeFactory().constructCollectionType(List.class, ItemDTO.class));
             var items = itemMapper.itemDTOToItem(initialIngredients);
             itemRepo.saveAll(items);
+            logger.info("Imported item definitions from {}", ingredientsLocation);
         } catch (IOException ex){
             logger.error(MessageFormat.format("Failed to load ingredients from {0}!", ingredientsLocation));
             logger.error(ex.getMessage());
@@ -197,6 +197,12 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
                 recipe.setOwner(importerUser);
                 recipeRepo.save(recipe);
             }
+            if (!initialRecipes.isEmpty())
+                if (importerUser == null)
+                    logger.info("Imported recipe definitions from {}", recipesLocation);
+                else
+                    logger.info("Imported recipe definitions from {} as {}", recipesLocation, importer);
+
         } catch (IOException ex){
             logger.error(MessageFormat.format("Failed to load recipes from {0}!", recipesLocation));
             logger.error(ex.getMessage());
