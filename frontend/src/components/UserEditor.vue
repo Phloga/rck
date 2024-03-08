@@ -98,7 +98,7 @@ async function changePassword() {
 <template>
     <NavBar :userCard="currentUserCard"></NavBar>
     <div class="panel">
-        <div class="large-text">Benutzer Informationen Bearbeiten</div>
+        <div class="large-text panel__title">Benutzer Informationen Bearbeiten</div>
         <Form @submit="saveChanges">
             <div class="panel_body--flex">
                 <div class="card single-column">
@@ -183,6 +183,10 @@ async function changePassword() {
 .panel button {
     margin: 2px 8px 2px 8px;
 } 
+
+.panel__title {
+    margin: 2px 8px 2px 8px;
+}
 
 .single-column {
     columns: 1;

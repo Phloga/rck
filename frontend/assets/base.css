@@ -38,8 +38,8 @@
     --color-background-critical: hsl(0, 81%, 64%);
     --color-background-control: hsl(185, 87%, 88%);
     --color-button-text: var(--color-dark-text);
-    --color-text: var(--color-light-text);
-    --color-text-faded: hsl(246, 32%, 77%);
+    --color-text: hsl(45, 88%, 94%);
+    --color-text-faded: hsla(45, 88%, 94%, 50%);
 
     --color-content-box: hsl(266, 84%, 7%);
     --color-border: hsl(248, 20%, 16%);
@@ -55,9 +55,10 @@
     --color-bg-6:  hsl(270, 6%, 14%);
     --color-bg-7:  hsl(270, 4%, 11%);
 
-    --color-fg-1:  hsl(183, 28%, 87%);
+    --color-fg-1:  #d5e6e7;
   }
 }
+
 
 *,
 *::before,
@@ -66,6 +67,7 @@
   margin: 0;
   font-weight: normal;
 }
+
 
 body {
   min-height: 100vh;

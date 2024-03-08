@@ -36,6 +36,10 @@ const createNewVisible = computed(() => {
     return props.enableCreateNew && filtereditems.value.length === 0
 })
 
+const resultsEmpty = computed(() => {
+    return filtereditems.value.length === 0
+})
+
 const newItem = ref(makeItem())
 
 function makeItem(){

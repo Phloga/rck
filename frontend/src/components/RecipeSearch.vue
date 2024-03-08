@@ -62,16 +62,104 @@ onMounted(() => {
     <header>
         <h1>Reverse Chefkoch</h1>
     </header>
-    <main>
-        <div class="content-box">
-            <input type='text' v-model="searchString">
+    <main class="responsive-row">
+        <div class="panel item-search">
+            <div class="item-search__header_box">
+                <div class="panel__item-search_label">Zutaten Auswahl</div>
+                <input type='text' v-model="searchString" class="borderless-field largetext panel__item-search" placeholder="Suche">
+            </div>
+            <div class="item-selector">
+                <div class="item-selector__selection">
+                    <ItemSelector :itemMap="availableItems" :searchString="searchString" @itemSelected="itemAdd"></ItemSelector>
+                </div>
+            </div>
+            <div class="item-selector">
+                <div>Ausgewählte Zutaten</div>
+                <div v-if="selectedItems.size != 0" class="item-selector__selection">
+                    <ItemSelector v-bind:itemMap="selectedItems" searchString="" @itemSelected="itemRemove"></ItemSelector>
+                </div>
+                <div v-if="selectedItems.size === 0" class="item-selector__no-items-message">keine</div>
+            </div>
+            <div class="item-search__footer_box">
+                <button @click="search" class="round-corners control">Suche</button>
+            </div>
         </div>
-        <div class="content-box content-box--no-scroll content-box--medium-height">
-            <ItemSelector :itemMap="availableItems" :searchString="searchString" @itemSelected="itemAdd"></ItemSelector>
-            <br>
-            <ItemSelector v-bind:itemMap="selectedItems" searchString="" @itemSelected="itemRemove"></ItemSelector>
-            <button @click="search">Suche</button>
+        <div class="panel item-search-results">
             <RecipeSearchResults :results="queryResults"></RecipeSearchResults>
         </div>
     </main>
 </template>
+
+<style>
+
+.item-search__header_box {
+    background: var(--color-bg-6);
+    display: inline-block;
+    margin: 0.3rem 1rem 0.3rem 1rem;
+    padding: 0.3rem;
+    box-shadow: 0 1px 3px 0 rgb(0, 0, 0), 0 1px 2px -1px rgb(0,0,0);
+}
+
+.item-search__footer_box {
+    background: var(--color-bg-6);
+    margin: 0.3rem 1rem 0.3rem 1rem;
+    padding: 0.3rem;
+    box-shadow: 0 1px 3px 0 rgb(0, 0, 0), 0 1px 2px -1px rgb(0,0,0);
+}
+
+
+.item-search {
+    width: 45rem;
+    align-self: flex-start;
+    flex-flow: column nowrap;
+    display: flex;
+}
+
+.item-search-results {
+    width: 45rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+
+.item-selector {
+    background: var(--color-bg-6);
+    color: var(--color-text);
+    list-style-type: none;
+    margin: 0.3rem 1rem 0.3rem 1rem;
+    padding: 0.3rem;
+    box-shadow: 0 1px 3px 0 rgb(0, 0, 0), 0 1px 2px -1px rgb(0,0,0);
+    flex-flow: row nowrap;
+}
+
+.item-selector > * {
+    display: block;
+}
+
+.item-selector__selection {
+    display: inline-block;
+    overflow-y: scroll;
+    height: 6rem;
+    width: 100%;
+}
+
+
+.item-selector__no-items-message {
+    font-size: large;
+    text-align: center;
+    height: 6rem;
+    margin: 3px;
+    width: 100%;
+    display: block;
+}
+
+
+.panel .panel__item-search_label {
+    float: inline-start;
+}
+
+.panel .panel__item-search {
+    margin: 0.3rem 1rem 0.3rem 1rem;
+    float: inline-end;
+}
+</style>

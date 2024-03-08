@@ -1,6 +1,6 @@
-const allUsersUri = "/sec-api/users/all"
-const userEndpoint = "/sec-api/users/p"
-const allRolesEndpoint = "/sec-api/users/roles/all"
+const allUsersUri = "/sec-api/user/all"
+const userEndpoint = "/sec-api/user/p"
+const allRolesEndpoint = "/sec-api/user/roles/all"
 
 async function fetchAwaitJson(uri){
     const response = await fetch(uri)
@@ -14,7 +14,7 @@ function fetchAllUsers() {
 
 function fetchAllRoles() {
     const response = fetchAwaitJson(allRolesEndpoint)
-    return response.json();
+    return response;
 }
 
 function sendUser(user, name) {
@@ -27,6 +27,9 @@ function sendUser(user, name) {
         body: JSON.stringify(user)
     })
 }
+
+
+
 
 export {
     fetchAllUsers, sendUser, fetchAllRoles

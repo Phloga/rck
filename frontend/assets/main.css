@@ -1,6 +1,13 @@
 @import './base.css';
 
 
+.responsive-row {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+
 .right-aligned {
   text-align: right;
 }
@@ -15,10 +22,14 @@
   background: var(--color-bg-6);
   color: var(--color-text);
   list-style-type: none;
-  margin: 1rem;
+  margin: 0.3rem 1rem 0.3rem 1rem;
   padding: 0;
   max-width: (100vw - 20px);
   box-shadow: 0 1px 3px 0 rgb(0, 0, 0), 0 1px 2px -1px rgb(0,0,0);
+}
+
+a.card{
+  text-decoration: none;
 }
 
 a.card__link:link{
@@ -41,9 +52,9 @@ a.card__link:link{
   background: var(--color-bg-5);
   color: var(--color-text);
   list-style-type: none;
-  margin: 1rem;
-  padding: 0;
-  max-width: (100vw - 20px);
+  margin: 0.5rem;
+  padding: 4px;
+  /*max-width: (100vw - 20px);*/
   box-shadow: 0 1px 3px 0 rgb(0, 0, 0), 0 1px 2px -1px rgb(0,0,0);
 }
 

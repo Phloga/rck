@@ -136,7 +136,7 @@ async function saveRecipe(){
   }
 
   const response = await fetch(submitTarget.value, {
-    method : "POST",
+    method : "PUT",
     headers : {"Content-Type" : "application/json"},
     body: JSON.stringify(recipeData)
   })

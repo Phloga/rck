@@ -1,8 +1,7 @@
 
-const currentUserUri = "/api/users/self"
+const currentUserUri = "/api/user/self"
 const unitListUri = "/api/units/all"
 const commonIngredientsListUri = "/api/items/common-ingredients"
-const userRoleListUri = "/api/users/roles/all"
 const recipesByIngredientsUri = "/api/recipes/by-ingredients"
 
 const userUriPrefix = "/api/users/p"

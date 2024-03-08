@@ -15,7 +15,7 @@ const props = defineProps({
     }
 })
 
-const userLink = computed(() => '/users/u/'+ props.userCard.userName)
+const userLink = computed(() => '/user/p/'+ props.userCard.userName)
 
 </script>
 
