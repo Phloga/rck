@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, computed} from 'vue'
 import {Form, Field, ErrorMessage} from 'vee-validate'
 import {fetchActiveUser} from '../serverApi'
 import {sendUser, fetchAllRoles} from '../serverSecuredApi'
@@ -25,6 +25,10 @@ const newPassword = ref("")
 const isNewUser = ref(true)
 
 const availableRoles = ref([])
+
+const isAdmin = computed(() => {
+    return userRoles.value.has("ADMIN")
+})
 
 onMounted(() => {
     const value = document.getElementById("app").getAttribute("data-init")        
@@ -113,7 +117,7 @@ async function changePassword() {
                 </div>
                 <div class="card">
                     <div>Rollen</div>
-                    <table class="item-table">
+                    <table v-if="isAdmin" class="item-table">
                         <tr v-for="role,i in userRoles" :key="i" class="role_card">
                             <td class="row-label">{{role}}</td>
                             <td>
@@ -129,6 +133,12 @@ async function changePassword() {
                             <button type="button" @click="addRole()" class="round-corners control">Hinzufügen</button>
                         </tr>
                     </table>
+                    <table v-else class="item-table">
+                        <tr v-for="role,i in userRoles" :key="i" class="role_card">
+                            <td class="row-label">{{role}}</td>
+                        </tr>
+                    </table>
+
                 </div>
 
                 <Field v-if="isNewUser" name="password" id="password" v-model="newPassword" placeholder="Neues Passwort" class="borderless-field large-text inline"/>

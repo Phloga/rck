@@ -131,7 +131,7 @@ onMounted(() => {
     <div>
       <br>
       <div class="block">
-        <div name="recipe-title" class="title borderless-field">{{ recipeName }}</div>
+        <div name="recipe-title" class="title">{{ recipeName }}</div>
       </div><br>
       <hr class="divider">
       <h2><span class="block">Zutatenliste</span></h2>
