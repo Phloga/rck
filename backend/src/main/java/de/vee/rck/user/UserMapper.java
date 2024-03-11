@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Maps AppUser entities to a varity of partial projections of the entity
@@ -76,9 +77,9 @@ public abstract class UserMapper {
 
     /** loads role from repository and adds it to user*/
     void addRoleToAppUser(AppUser user, String roleName){
-        UserRole role = userRoleRepo.findByName(roleName);
-        if (role != null){
-            user.getRoles().add(role);
+        Optional<UserRole> role = userRoleRepo.findByName(roleName);
+        if (role.isPresent()){
+            user.getRoles().add(role.get());
         } else {
             throw new UserRoleNotFoundError(MessageFormat.format("addRole(..) was unable to find role with name {0}", roleName));
         }

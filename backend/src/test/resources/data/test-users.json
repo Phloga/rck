@@ -1,0 +1,9 @@
+[
+  {
+    "userName" : "snorlax",
+    "email" : "lol",
+    "roles" :  ["ROLE_USER"],
+    "enabled" : true,
+    "password": "12345"
+  }
+]

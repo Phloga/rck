@@ -34,8 +34,8 @@ public class UserServiceUnitTest {
 
     private AppUser mockUser;
 
-    private final UserRole roleUser = new UserRole("ROLE_USER");
-    private final UserRole roleAdmin = new UserRole("ROLE_USER");
+    private final UserRole roleUser = new UserRole("ROLE_USER", 2);
+    private final UserRole roleAdmin = new UserRole("ROLE_ADMIN", 1);
 
     @BeforeEach
     void setup(){
@@ -46,6 +46,11 @@ public class UserServiceUnitTest {
         mockUser.setPassword(passwordEncoder.encode(mockUserPassword));
         mockUser.setEmail(mockUserEmail);
         mockUser.setRoles(List.of(roleAdmin));
+
+        when(roleRepo.findById(2L)).thenReturn(Optional.of(roleUser));
+        when(roleRepo.findById(1L)).thenReturn(Optional.of(roleAdmin));
+        when(roleRepo.findByName("ROLE_ADMIN")).thenReturn(Optional.of(roleAdmin));
+        when(roleRepo.findByName("ROLE_USER")).thenReturn(Optional.of(roleUser));
     }
 
 

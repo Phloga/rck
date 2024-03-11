@@ -1,8 +1,6 @@
 package de.vee.rck.user.dto;
 
-import java.util.Collection;
-
-public interface AppUserDetails extends UserCard{
+public interface AppUserDetails extends AppUserAbstract {
     String getEmail();
     Boolean getEnabled();
 }

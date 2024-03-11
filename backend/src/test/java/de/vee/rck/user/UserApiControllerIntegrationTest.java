@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         classes = RecipeApplication.class)
 public class UserApiControllerIntegrationTest {
 
-    static final String secUsersApi = "/sec-api/users/";
+    static final String secUsersApi = "/sec-api/user/";
 
     static final String usersRoot = secUsersApi + "p/";
     static final String allUsersUri = secUsersApi + "all";
@@ -134,7 +134,6 @@ public class UserApiControllerIntegrationTest {
                         status().is4xxClientError()
                 );
     }
-
 
     static <T> String toJson(T object) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();

@@ -32,6 +32,11 @@ public class AppUser {
                     name = "role_id", referencedColumnName = "id"))
     private Collection<UserRole> roles;
 
+    public boolean hasRole(long roleId){
+        return getRoles().stream().anyMatch(
+                role -> {return  role.getId() == roleId;});
+    }
+
     /*
     @ManyToMany(mappedBy = "permittedUsers")
     private Collection<Recipe> recipes;

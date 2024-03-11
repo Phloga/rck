@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -24,7 +22,7 @@ public class UserApiController {
     private UserService userService;
 
     @GetMapping("/api/user/self")
-    public UserCard sendCurrentUserInformation(Authentication authentication, HttpServletResponse response){
+    public AppUserAbstract sendCurrentUserInformation(Authentication authentication, HttpServletResponse response){
         if (authentication == null || !authentication.isAuthenticated()) {
             return userService.anonymousUserCard();
         }
@@ -88,7 +86,7 @@ public class UserApiController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void receiveUpdatedUserInformation(@PathVariable String name, @RequestBody UserUpdateRequest userData, HttpServletRequest request, HttpServletResponse response){
         var updatedUser = userService.updateAppUser(userData, name);
-        response.setHeader("Location", MessageFormat.format("/users/p/{0}", updatedUser.getUserName()));
+        response.setHeader("Location", MessageFormat.format("/user/p/{0}", updatedUser.getUserName()));
         response.setStatus(HttpStatus.CREATED.value());
     }
 }

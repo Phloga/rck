@@ -16,5 +16,7 @@ public class RecipeApplicationInitializationConfiguration {
 
     private List<DataInitialization> data;
 
+    private String usersLocation;
+
 }
 

@@ -1,6 +1,8 @@
 package de.vee.rck.user;
 
 import de.vee.rck.RecipeApplication;
+import de.vee.rck.user.dto.UserUpdateRequest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

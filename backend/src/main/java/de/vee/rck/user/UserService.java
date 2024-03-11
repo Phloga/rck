@@ -1,6 +1,7 @@
 package de.vee.rck.user;
 
 import de.vee.rck.user.dto.*;
+import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,14 +11,30 @@ import java.util.*;
 import java.util.stream.StreamSupport;
 
 @Service
-@AllArgsConstructor
 public class UserService {
     private AppUserRepository userRepo;
     private UserRoleRepository userRoleRepo;
     private PasswordEncoder passwordEncoder;
     private UserMapper userMapper;
+    private Long adminRoleIdMem;
+
+    public static final String adminRoleName = "ROLE_ADMIN";
 
     private static UserQueryResponse anonymousUser;
+
+    public UserService(AppUserRepository userRepo, UserRoleRepository roleRepo, PasswordEncoder passwordEncoder, UserMapper userMapper){
+        this.userRepo = userRepo;
+        this.userRoleRepo = roleRepo;
+        this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
+    }
+
+    long getAdminRoleId(){
+        if (adminRoleIdMem == null){
+            adminRoleIdMem = userRoleRepo.findByName(adminRoleName).orElseThrow().getId();
+        }
+        return adminRoleIdMem;
+    }
 
     @Transactional
     public Collection<String> availableUserRoles() {
@@ -33,7 +50,7 @@ public class UserService {
                 .toList();
     }
 
-    public UserCard anonymousUserCard(){
+    public AppUserAbstract anonymousUserCard(){
         if (anonymousUser == null){
             anonymousUser = new UserQueryResponse("anonymous", "", new ArrayList<>(), false);
         }
@@ -51,10 +68,10 @@ public class UserService {
         return userRepo.findByUserName(name);
     }
 
-    /// check whether a user with role admin exists
-    public boolean anyAdminExists(){
-        var adminRole = userRoleRepo.findByName("ROLE_ADMIN");
-        return userRepo.countByRole(adminRole.getId()) > 0;
+    /// check how many users with role admin exist
+    public int adminCount() {
+        var x = userRepo.countByRole(getAdminRoleId());
+        return x;
     }
 
     public AppUser createAppUser(UserUpdateRequest user) {
@@ -96,7 +113,16 @@ public class UserService {
         } else {
             // update exiting user
             AppUser updatedUser = userEntity.get();
+
+            boolean targetIsAdmin = updatedUser.getRoles().stream().anyMatch(
+                    role -> {return  role.getId() == getAdminRoleId();});
+
+            boolean targetIsLastAdmin = adminCount() == 1;
+
             userMapper.updateAppUserFromAppUserDetails(updatedUser, user, user.getPassword());
+            if (targetIsAdmin && targetIsLastAdmin && !updatedUser.hasRole(getAdminRoleId())){
+                throw new UserUpdateError("can't remove last admin",null);
+            }
             return userRepo.save(updatedUser);
         }
     }

@@ -15,6 +15,7 @@ import de.vee.rck.units.dto.UnitDetails;
 import de.vee.rck.user.*;
 import de.vee.rck.user.dto.UserUpdateRequest;
 import de.vee.rck.utils.Utils;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,29 +34,28 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
 
     private static final Logger logger = LoggerFactory.getLogger(InitialSetup.class);
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
+    @Autowired @Setter
     private RecipeApplicationInitializationConfiguration config;
-    @Autowired
+    @Autowired @Setter
+    private UserService userService;
+    @Autowired @Setter
     private UserRoleRepository roleRepository;
-    @Autowired
+    @Autowired @Setter
     private PrivilegeRepository privilegeRepository;
-    @Autowired
-    private ItemRepository itemRepo;
-    @Autowired
+    @Autowired @Setter
     private ResourceLoader resLoader;
 
-    @Autowired
+    @Autowired @Setter
     private RecipeMapper recipeMapper;
-    @Autowired
+    @Autowired @Setter
     private RecipeRepository recipeRepo;
-    @Autowired
+    @Autowired @Setter
     private UnitRepository unitRepo;
-    @Autowired
+    @Autowired @Setter
     private UnitMapper unitMapper;
-    @Autowired
+    @Autowired @Setter
+    private ItemRepository itemRepo;
+    @Autowired @Setter
     private ItemMapper itemMapper;
     private boolean setupComplete;
 
@@ -88,9 +88,13 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
                 listAll, modifyItemPrivilege, removeItemPrivilege, addRecipePrivilege, modifyRecipePrivilege));
         createRoleIfNotFound("ROLE_USER", Arrays.asList(
                 addRecipePrivilege, modifyRecipePrivilege, listAll));
-        createRoleIfNotFound("ROLE_ANONYMOUS", List.of());
+        //createRoleIfNotFound("ROLE_ANONYMOUS", List.of());
 
-        if (!userService.anyAdminExists()) {
+        if (config.getUsersLocation() != null) {
+            loadUsers(config.getUsersLocation());
+        }
+
+        if (userService.adminCount() == 0) {
             UserUpdateRequest admin = new UserUpdateRequest();
             admin.setRoles(List.of("ROLE_ADMIN"));
             admin.setUserName("Admin");
@@ -100,7 +104,6 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
             userService.createAppUser(admin);
             logger.info("Added default user {} to the database", admin.getUserName());
         }
-
 
         for (var init : config.getData()){
             if (init.unitsLocation() != null && unitRepo.count() == 0) {
@@ -130,16 +133,37 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
     }
 
     @Transactional
-    UserRole createRoleIfNotFound(
-            String name, Collection<Privilege> privileges) {
-
-        UserRole role = roleRepository.findByName(name);
-        if (role == null) {
-            role = new UserRole(name);
-            role.setPrivileges(privileges);
-            roleRepository.save(role);
+    UserRole createRoleIfNotFound(String name, Collection<Privilege> privileges) {
+        Optional<UserRole> role = roleRepository.findByName(name);
+        if (role.isEmpty()) {
+            UserRole newRole = new UserRole(name);
+            newRole.setPrivileges(privileges);
+            return roleRepository.save(newRole);
         }
-        return role;
+        return role.get();
+    }
+
+    /***
+     * Creates users from data provided by the json file pointed to by location
+     * If an user name is already in use, the user with the same name in the json file will be ignored
+     * @param usersLocation (class) path to json file
+     */
+    @Transactional
+    protected void loadUsers(String usersLocation){
+        try {
+            String usersJsonText = Utils.readResourceAsString(resLoader, usersLocation);
+            List<UserUpdateRequest> initialUsers = jsonMapper.readValue(usersJsonText,
+                    jsonMapper.getTypeFactory().constructCollectionType(List.class, UserUpdateRequest.class));
+
+            for (var user : initialUsers){
+                if (userService.findUserByName(user.getUserName()).isEmpty())
+                    userService.updateAppUser(user, user.getUserName());
+            }
+            logger.info("Imported users from {}", usersLocation);
+        } catch (IOException ex){
+            logger.error(MessageFormat.format("Failed to load users from {0}!", usersLocation));
+            logger.error(ex.getMessage());
+        }
     }
 
     @Transactional

@@ -12,10 +12,6 @@ spring:
     password: ""
   jpa:
     open-in-view: no
-    show-sql: yes
-    properties:
-      hibernate:
-        format_sql: yes
   mvc:
     log-request-details: true
     static-path-pattern: /assets/**
@@ -40,6 +36,7 @@ logging:
           nodeValue: DEBUG
 rck:
   init:
+    users-location: "classpath:data/test-users.json"
     data: [
       {
         recipes-location: "classpath:data/test-recipes.json",

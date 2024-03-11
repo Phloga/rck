@@ -12,7 +12,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @Setter
 @Getter
-public class UserUpdateRequest implements AppUserDetails, AppUserPassword{
+public class UserUpdateRequest implements AppUserDetails {
     @NotNull
     private String userName;
     private String email;

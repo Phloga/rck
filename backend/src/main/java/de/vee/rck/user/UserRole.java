@@ -35,4 +35,10 @@ public class UserRole {
     public UserRole(String name){
         this.name = name;
     }
+
+
+    public UserRole(String name, long id){
+        this.name = name;
+        this.id = id;
+    }
 }
