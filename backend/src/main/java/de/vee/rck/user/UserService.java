@@ -12,10 +12,10 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class UserService {
-    private AppUserRepository userRepo;
-    private UserRoleRepository userRoleRepo;
-    private PasswordEncoder passwordEncoder;
-    private UserMapper userMapper;
+    private final AppUserRepository userRepo;
+    private final UserRoleRepository userRoleRepo;
+    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
     private Long adminRoleIdMem;
 
     public static final String adminRoleName = "ROLE_ADMIN";

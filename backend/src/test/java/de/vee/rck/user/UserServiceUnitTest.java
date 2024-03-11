@@ -25,7 +25,6 @@ public class UserServiceUnitTest {
 
     private final AppUserRepository userRepo = mock(AppUserRepository.class);
     private final UserRoleRepository roleRepo = mock(UserRoleRepository.class);
-    private final UserRoleRepository userRoleRepo = mock(UserRoleRepository.class);
     private final UserMapper userMapper = mock(UserMapper.class);
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -39,23 +38,21 @@ public class UserServiceUnitTest {
 
     @BeforeEach
     void setup(){
-        dut = new UserService(userRepo, userRoleRepo, passwordEncoder, userMapper);
+        dut = new UserService(userRepo, roleRepo, passwordEncoder, userMapper);
         mockUser = new AppUser();
         mockUser.setUserName(mockUserName);
         mockUser.setEnabled(false);
         mockUser.setPassword(passwordEncoder.encode(mockUserPassword));
         mockUser.setEmail(mockUserEmail);
         mockUser.setRoles(List.of(roleAdmin));
-
-        when(roleRepo.findById(2L)).thenReturn(Optional.of(roleUser));
-        when(roleRepo.findById(1L)).thenReturn(Optional.of(roleAdmin));
-        when(roleRepo.findByName("ROLE_ADMIN")).thenReturn(Optional.of(roleAdmin));
-        when(roleRepo.findByName("ROLE_USER")).thenReturn(Optional.of(roleUser));
     }
 
 
     @Test
     void testUpdateAppUserWithEmptyRequest(){
+        when(roleRepo.findById(1L)).thenReturn(Optional.of(roleAdmin));
+        when(roleRepo.findByName(roleAdmin.getName())).thenReturn(Optional.of(roleAdmin));
+
         when(userRepo.findByUserName(mockUserName)).thenReturn(Optional.of(mockUser));
         when(userRepo.save(mockUser)).thenReturn(mockUser);
 
@@ -73,6 +70,11 @@ public class UserServiceUnitTest {
 
         when(userRepo.findByUserName(mockUserName)).thenReturn(Optional.of(mockUser));
         when(userRepo.save(mockUser)).thenReturn(updatedUser);
+        when(roleRepo.findById(2L)).thenReturn(Optional.of(roleUser));
+        when(roleRepo.findById(1L)).thenReturn(Optional.of(roleAdmin));
+        when(roleRepo.findByName(roleAdmin.getName())).thenReturn(Optional.of(roleAdmin));
+        when(roleRepo.findByName(roleUser.getName())).thenReturn(Optional.of(roleUser));
+
 
         UserUpdateRequest request = new UserUpdateRequest();
         request.setEnabled(true);

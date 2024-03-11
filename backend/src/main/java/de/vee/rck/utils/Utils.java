@@ -19,8 +19,8 @@ public class Utils {
     }
 
     public static String readResourceAsString(ResourceLoader resLoader , String location) throws IOException {
-        Resource initFile = resLoader.getResource(location);
-        InputStream fileStream = initFile.getInputStream();
+        Resource res = resLoader.getResource(location);
+        InputStream fileStream = res.getInputStream();
         return outputAsString(fileStream);
     }
 }

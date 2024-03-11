@@ -149,7 +149,7 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
      * @param usersLocation (class) path to json file
      */
     @Transactional
-    protected void loadUsers(String usersLocation){
+    public void loadUsers(String usersLocation){
         try {
             String usersJsonText = Utils.readResourceAsString(resLoader, usersLocation);
             List<UserUpdateRequest> initialUsers = jsonMapper.readValue(usersJsonText,
@@ -167,7 +167,7 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
     }
 
     @Transactional
-    protected void loadUnits(String unitsLocation) {
+    public void loadUnits(String unitsLocation) {
         try {
             String unitsJsonText = Utils.readResourceAsString(resLoader, unitsLocation);
             List<UnitDetails> initialUnitDetails = jsonMapper.readValue(unitsJsonText,
@@ -182,7 +182,7 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
     }
 
     @Transactional
-    protected void loadIngredients(String ingredientsLocation) {
+    public void loadIngredients(String ingredientsLocation) {
         try {
             String ingredientsJsonText = Utils.readResourceAsString(resLoader, ingredientsLocation);
             List<ItemDTO> initialIngredients = jsonMapper.readValue(ingredientsJsonText,
@@ -197,7 +197,7 @@ public class InitialSetup implements ApplicationListener<ContextRefreshedEvent> 
     }
 
     @Transactional
-    protected void loadRecipes(String recipesLocation, String importer) {
+    public void loadRecipes(String recipesLocation, String importer) {
         try {
             String recipesJsonText = Utils.readResourceAsString(resLoader, recipesLocation);
             List<PackedRecipe> initialRecipes = jsonMapper.readValue(recipesJsonText,
