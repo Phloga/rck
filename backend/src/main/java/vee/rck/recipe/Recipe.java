@@ -1,6 +1,6 @@
 package vee.rck.recipe;
 
-import vee.rck.user.AppUser;
+import vee.rck.security.AppUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

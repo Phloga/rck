@@ -1,4 +1,4 @@
-package vee.rck.user.dto;
+package vee.rck.security.dto;
 
 import java.util.Collection;
 

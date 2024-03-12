@@ -4,7 +4,7 @@ import vee.rck.RecipeApplication;
 import vee.rck.item.Item;
 import vee.rck.item.ItemRepository;
 import vee.rck.units.UnitRepository;
-import vee.rck.user.AppUserRepository;
+import vee.rck.security.AppUserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

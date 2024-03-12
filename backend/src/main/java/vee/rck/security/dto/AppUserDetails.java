@@ -1,4 +1,4 @@
-package vee.rck.user.dto;
+package vee.rck.security.dto;
 
 public interface AppUserDetails extends AppUserAbstract {
     String getEmail();

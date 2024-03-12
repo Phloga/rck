@@ -1,4 +1,4 @@
-package vee.rck.user;
+package vee.rck.security;
 
 import org.springframework.data.repository.CrudRepository;
 

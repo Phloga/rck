@@ -1,6 +1,6 @@
-package vee.rck.user;
+package vee.rck.security;
 
-import vee.rck.user.dto.*;
+import vee.rck.security.dto.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

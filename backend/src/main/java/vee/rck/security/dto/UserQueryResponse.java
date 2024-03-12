@@ -1,6 +1,5 @@
-package vee.rck.user.dto;
+package vee.rck.security.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,15 +7,13 @@ import lombok.Setter;
 
 import java.util.Collection;
 
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
-public class UserUpdateRequest implements AppUserDetails {
-    @NotNull
+public class UserQueryResponse implements AppUserDetails {
     private String userName;
     private String email;
     private Collection<String> roles;
     private Boolean enabled;
-    private String password;
 }

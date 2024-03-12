@@ -5,17 +5,15 @@ import vee.rck.item.ItemRepository;
 import vee.rck.recipe.dto.PackedRecipe;
 import vee.rck.recipe.dto.RecipeDetails;
 import vee.rck.security.AppUserDetailsService;
-import vee.rck.user.AppUser;
-import vee.rck.user.AppUserRepository;
+import vee.rck.security.AppUser;
+import vee.rck.security.AppUserRepository;
 import lombok.AllArgsConstructor;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.text.MessageFormat;
 import java.util.Collection;
 

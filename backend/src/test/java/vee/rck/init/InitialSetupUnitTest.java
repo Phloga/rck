@@ -10,31 +10,27 @@ import vee.rck.recipe.Recipe;
 import vee.rck.recipe.RecipeLine;
 import vee.rck.recipe.RecipeMapper;
 import vee.rck.recipe.RecipeRepository;
-import vee.rck.recipe.dto.PackedRecipe;
 import vee.rck.recipe.dto.RecipeDetails;
+import vee.rck.security.AppUser;
+import vee.rck.security.PrivilegeRepository;
+import vee.rck.security.UserRoleRepository;
+import vee.rck.security.UserService;
 import vee.rck.units.Unit;
 import vee.rck.units.UnitMapper;
 import vee.rck.units.UnitRepository;
 import vee.rck.units.UnitType;
-import vee.rck.user.*;
-import vee.rck.user.dto.UserUpdateRequest;
+import vee.rck.security.dto.UserUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.openMocks;
 
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ResourceLoader;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 

@@ -1,9 +1,8 @@
-package vee.rck.user;
+package vee.rck.security;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 public interface AppUserRepository extends CrudRepository<AppUser, Long> {

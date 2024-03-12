@@ -1,11 +1,9 @@
-package vee.rck.user;
+package vee.rck.security;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import vee.rck.recipe.Recipe;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,11 +1,9 @@
 package vee.rck.user;
 
-import vee.rck.user.dto.UserUpdateRequest;
-import org.junit.jupiter.api.BeforeAll;
+import vee.rck.security.*;
+import vee.rck.security.dto.UserUpdateRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Streamable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

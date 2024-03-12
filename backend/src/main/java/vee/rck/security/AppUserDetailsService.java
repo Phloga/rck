@@ -1,9 +1,6 @@
 package vee.rck.security;
 
 import lombok.AllArgsConstructor;
-import vee.rck.user.Privilege;
-import vee.rck.user.UserRole;
-import vee.rck.user.AppUserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

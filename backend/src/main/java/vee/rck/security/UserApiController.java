@@ -1,6 +1,6 @@
-package vee.rck.user;
+package vee.rck.security;
 
-import vee.rck.user.dto.*;
+import vee.rck.security.dto.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
