@@ -25,8 +25,8 @@ const userLink = computed(() => '/user/p/'+ props.userCard.userName)
         <div v-if="userCard.roles.includes('ROLE_ADMIN')" href="#" class="dropdown">
             <button>Admin Tools</button>
             <div class="dropdown__content">
-                <a href="/users/index">Users</a>
-                <a href="/items/index">Items</a>
+                <a href="/user/index">Users</a>
+                <a href="/item/index">Items</a>
             </div>
         </div>
         <a v-if="userCard.roles.length > 0" :href="userLink"> {{ userCard.userName }}</a>

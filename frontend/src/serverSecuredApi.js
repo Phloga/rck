@@ -1,10 +1,17 @@
 const allUsersUri = "/sec-api/user/all"
 const userEndpoint = "/sec-api/user/p"
 const allRolesEndpoint = "/sec-api/user/roles/all"
+const allItemsListUri = "/api/items/all"
+
 
 async function fetchAwaitJson(uri){
     const response = await fetch(uri)
     return response.json() 
+}
+
+
+function fetchAllItems() {
+    return fetchAwaitJson(allItemsListUri)
 }
 
 function fetchAllUsers() {
@@ -32,5 +39,5 @@ function sendUser(user, name) {
 
 
 export {
-    fetchAllUsers, sendUser, fetchAllRoles
+    fetchAllUsers, sendUser, fetchAllRoles, fetchAllItems
 }

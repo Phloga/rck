@@ -34,10 +34,15 @@ function findByIngredients(itemIds){
     return fetchAwaitJson(requestUri)
 }
 
+function placeholderUserCard() {
+    return {userName: "", roles: []}
+}
+
 export {
     fetchUser,
     fetchActiveUser, 
     fetchUnitList,
     fetchCommonIngredients,
-    findByIngredients
+    findByIngredients,
+    placeholderUserCard
 }

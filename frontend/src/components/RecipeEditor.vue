@@ -21,8 +21,6 @@ import Warning from "@editorjs/warning"
 import Table from "@editorjs/table"
 
 
-//const itemListUri = "/api/items/allItems";
-
 const availableItems = ref(new Map())
 const remainingItems = ref(new Map())
 const availableUnits = ref(new Array())
@@ -40,7 +38,7 @@ const validateAmount = yup.number().min(0)
 const validateTitle = yup.string().required();
 
 var editor
-const submitTarget = ref("/recipe/newRecipe")
+const submitTarget = ref("/recipe/new")
 
 function fixRemainingItems(){
   ingredients.value.forEach(element => {

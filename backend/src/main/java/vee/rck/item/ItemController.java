@@ -11,6 +11,6 @@ public class ItemController {
 
     @GetMapping(path="/index")
     public String getItems(){
-        return "item/index";
+        return "item-editor";
     }
 }
