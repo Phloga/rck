@@ -1,7 +1,7 @@
 [
   {
     "userName" : "snorlax",
-    "email" : "lol",
+    "email" : "lol@rofl.com",
     "roles" :  ["ROLE_USER"],
     "enabled" : true,
     "password": "12345"

@@ -40,7 +40,7 @@ public class ItemsApiController {
 
 
     @PreAuthorize("hasAuthority('MODIFY_ITEM')")
-    @PostMapping(path="/api/items/modified")
+    @PutMapping(path="/api/item/modified")
     public void changeItem(@RequestBody List<ItemDTO> itemDetails, Authentication authentication){
         var iterator = itemRepo.saveAll(itemMapper.itemDTOToItem(itemDetails));
         var affectedItemIds = StreamSupport.stream(iterator.spliterator(), false)

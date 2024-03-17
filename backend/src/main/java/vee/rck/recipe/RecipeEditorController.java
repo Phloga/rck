@@ -35,10 +35,12 @@ public class RecipeEditorController {
 
     private static final String recipeEditorPathPattern = "/recipe/d/{0}/editor";
 
+    private static final String recipeEditorTemplate = "recipe-editor";
+    private static final String recipeViewTemplate = "recipe-view";
 
     @GetMapping("/new")
     String openRecipeEditor(Model model){
-        return "recipeEditor";
+        return recipeEditorTemplate;
     }
     @GetMapping("/d/{id}")
     ModelAndView openRecipe(@PathVariable("id") Long recipeId) throws JsonProcessingException {
@@ -47,7 +49,7 @@ public class RecipeEditorController {
         String jsonText = jsonMapper.writeValueAsString(recipeService.findAndPackRecipe(recipeId));
         modelMap.addAttribute("recipe", jsonText);
         modelMap.addAttribute("recipeId", recipeId);
-        return new ModelAndView("recipeView", modelMap);
+        return new ModelAndView(recipeViewTemplate, modelMap);
     }
 
     @PreAuthorize("hasAuthority('MODIFY_RECIPE')")
@@ -58,7 +60,7 @@ public class RecipeEditorController {
         String jsonText = mapper.writeValueAsString(recipeService.findAndPackRecipe(recipeId));
         modelMap.addAttribute("recipe", jsonText);
         modelMap.addAttribute("recipeId", recipeId);
-        return new ModelAndView("recipeEditor", modelMap);
+        return new ModelAndView(recipeEditorTemplate, modelMap);
     }
 
     /**

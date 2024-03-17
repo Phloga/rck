@@ -25,7 +25,7 @@
   --border-radius-small: 2px;
 }
 
-@media (prefers-color-scheme: dark) {
+/*@media (prefers-color-scheme: dark) {*/
   :root {
     --color-text-selection-background: #50595d;
     --color-background: hsl(265, 89%, 11%);
@@ -40,6 +40,7 @@
     --color-button-text: var(--color-dark-text);
     --color-text: hsl(45, 88%, 94%);
     --color-text-faded: hsla(45, 88%, 94%, 50%);
+    --color-text-lightly-faded: hsla(44, 87%, 94%, 0.74);
 
     --color-content-box: hsl(266, 84%, 7%);
     --color-border: hsl(248, 20%, 16%);
@@ -57,7 +58,7 @@
 
     --color-fg-1:  #d5e6e7;
   }
-}
+/*}*/
 
 
 *,

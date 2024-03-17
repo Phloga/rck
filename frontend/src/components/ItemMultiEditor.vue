@@ -5,7 +5,7 @@ import MessageOverlay from "./MessageOverlay.vue";
 import {onMounted, ref, reactive} from "vue"
 import NavBar from "./NavBar.vue";
 import { fetchActiveUser, placeholderUserCard } from "@/serverApi";
-import { fetchAllItems } from "@/serverSecuredApiMock";
+import { fetchAllItems } from "@/serverSecuredApi";
 
 
 const searchString =  ref("")
@@ -45,14 +45,14 @@ function itemAdd(item) {
 }
 
 function saveChanges(){
-    const postItemChangesUri = "/api/item/modified"
+    const putItemChangesUri = "/api/item/modified"
     //const csrf_token = document.querySelector('meta[name="_csrf"]').content
     
     //const changesSubmission = Array.from(modifiedItems, ([key, value]) =>  value )
     //TODO add newly created item to changesSubmission
 
-    fetch(postItemChangesUri, {
-        method: "POST",
+    fetch(putItemChangesUri, {
+        method: "PUT",
         headers: {
             "Content-Type": "application/json",
             //"X-CSRF-TOKEN": csrf_token
