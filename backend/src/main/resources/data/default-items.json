@@ -1,0 +1,106 @@
+[
+  {
+    "name": "Zucker",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Salz",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Milch",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Mehl",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Butter",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Wasser",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Tomate",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Eier",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Zwiebel",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Karotte",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Knoblauch",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Wasabi",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Sonnenblumen Öl",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Tomatenmark",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Tomatenstücke",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Lorbeerblätter",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Italienische Kräuter",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Spaghetti",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Staudensellerie",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Parmesan",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Rinderhackfleisch",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Banane",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Backpulver",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Kakao",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Vanille Zucker",
+    "isBaseIngredient": "true"
+  },
+  {
+    "name": "Puderzucker",
+    "isBaseIngredient": "true"
+  }
+]

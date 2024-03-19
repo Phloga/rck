@@ -1,0 +1,187 @@
+[
+  {
+    "name": "Schoko-Bannanen-Ecken",
+    "content": "",
+    "ingredients": [
+      {
+        "itemId": null,
+        "itemName": "Banane",
+        "isOptional": false,
+        "unit": "pieces",
+        "amount": 1
+      },
+      {
+        "itemId": null,
+        "itemName": "Mehl",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 250
+      },
+      {
+        "itemId": null,
+        "itemName": "Backpulver",
+        "isOptional": false,
+        "unit": "teaspoon_uk",
+        "amount": 1
+      },
+      {
+        "itemId": null,
+        "itemName": "Kakao",
+        "isOptional": false,
+        "unit": "tablespoon_uk",
+        "amount": 2
+      },
+      {
+        "itemId": null,
+        "itemName": "Zucker",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 125
+      },
+      {
+        "itemId": null,
+        "itemName": "Vanille Zucker",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 8
+      },
+      {
+        "itemId": null,
+        "itemName": "Salz",
+        "isOptional": false,
+        "unit": "pinch",
+        "amount": 1
+      },
+      {
+        "itemId": null,
+        "itemName": "Butter",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 100
+      },
+      {
+        "itemId": null,
+        "itemName": "Puderzucker",
+        "isOptional": false,
+        "unit": "none",
+        "amount": 1
+      }
+    ],
+    "products" : [
+      {
+      "itemId": null,
+      "itemName": "Schoko-Bannanen-Ecken",
+      "isOptional": false,
+      "unit": "pieces",
+      "amount": 60
+      }
+    ]
+  },
+  {
+    "name": "Butter Plätzchen",
+    "content": "",
+    "ingredients": [
+      {
+        "itemId": null,
+        "itemName": "Mehl",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 500
+      },
+      {
+        "itemId": null,
+        "itemName": "Zucker",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 250
+      },
+      {
+        "itemId": null,
+        "itemName": "Butter",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 250
+      }
+    ],
+    "products": [
+      {
+        "itemId": null,
+        "itemName": "Butter Plätzchen",
+        "isOptional": false,
+        "unit": "none",
+        "amount": 0
+      }
+    ]
+  },
+  {
+    "name": "Spaghetti Bolognese",
+    "content": "",
+    "ingredients": [
+      {
+        "itemId": null,
+        "itemName": "Zwiebel",
+        "isOptional": false,
+        "unit": "none",
+        "amount": 1
+      },
+      {
+        "itemId": null,
+        "itemName": "Karotte",
+        "isOptional": false,
+        "unit": "none",
+        "amount": 1
+      },
+      {
+        "itemId": null,
+        "itemName": "Knoblauch",
+        "isOptional": false,
+        "unit": "cloves",
+        "amount": 2
+      },
+      {
+        "itemId": null,
+        "itemName": "Sonnenblumen Öl",
+        "isOptional": false,
+        "unit": "none",
+        "amount": 2
+      },
+      {
+        "itemId": null,
+        "itemName": "Staudensellerie",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 50
+      },
+      {
+        "itemId": null,
+        "itemName": "Rinderhackfleisch",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 250
+      },
+      {
+        "itemId": null,
+        "itemName": "Tomate",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 200
+      },
+      {
+        "itemId": null,
+        "itemName": "Spaghetti",
+        "isOptional": false,
+        "unit": "gram",
+        "amount": 200
+      }
+    ],
+    "products": [
+      {
+        "itemId": null,
+        "itemName": "Spaghetti Bolognese",
+        "isOptional": false,
+        "unit": "portion",
+        "amount": 2
+      }
+    ]
+  }
+]
