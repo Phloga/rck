@@ -1,6 +1,5 @@
 <script setup>
 import ItemSelector from "./ItemSelector.vue"
-import ModalMessageBox from "./ModalMessageBox.vue"
 import MessageOverlay from "./MessageOverlay.vue";
 import {onMounted, ref, reactive} from "vue"
 import NavBar from "./NavBar.vue";
@@ -15,10 +14,6 @@ const modifiedItems = reactive(new Array())
 const modalMessages = reactive(new Array())
 
 const currentUserCard = ref(placeholderUserCard())
-
-function messageDismiss(index) {
-    modalMessages.splice(index,1)
-}
 
 function updateItemName(event, i) {
     var item = modifiedItems[i]

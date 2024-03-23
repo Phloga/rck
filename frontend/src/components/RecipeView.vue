@@ -1,5 +1,5 @@
 <script setup>
-import "/assets/recipeEditor.css";
+import "/assets/recipe-editor.css";
 import NavBar from "./NavBar.vue"
 import {fetchActiveUser} from "../serverApi"
 
@@ -85,27 +85,6 @@ function setupEditor(recipeObj){
 
 }
 
-function addIngredient(item){
-  ingredients.value.push({
-    itemName: item.name,
-    itemId: item.id,
-    isOptional: false,
-    unit: "",
-    amount: 0.0
-  })
-  remainingItems.value.delete(item.id)
-}
-
-function removeIngredient(index){
-  let element = ingredients.value[index]
-  ingredients.value.splice(index,1)
-  if (element.itemId == null){
-    return
-  }
-  const item = availableItems.value.get(element.itemId)
-  remainingItems.value.set(element.itemId, item)
-}
-
 onMounted(() => {
     fetch(unitListUri)
     .then(response => response.json())
@@ -126,11 +105,10 @@ onMounted(() => {
 
 <template>
     <NavBar :userCard="currentUserCard"></NavBar>
-    <h1><span class="block">Rezepte Editor</span></h1>
     <main>
-    <div>
+    <div class="panel">
       <br>
-      <div class="block">
+      <div class="card">
         <div name="recipe-title" class="title">{{ recipeName }}</div>
       </div><br>
       <hr class="divider">
@@ -140,7 +118,7 @@ onMounted(() => {
       </p>
 
       <table class="item-table">
-        <tr v-for="listing,i in ingredients" :key="i">
+        <tr class="card" v-for="listing,i in ingredients" :key="i">
           <td class="row-label">{{listing.itemName}}</td>
           <td>
             <div> {{ listing.amount }} </div>
@@ -149,10 +127,19 @@ onMounted(() => {
         </tr>
       </table>
     </div>
-    <hr class="divider">
-    <h2><span class="block">Beschreibung</span></h2>
-    <div class="section-container">
+    <div class="panel">
+      <h2><span class="block">Beschreibung</span></h2>
+      <div class="section-container">
         <div class="editor" id="editorjs"></div>
+      </div>
     </div>
+
     </main>
 </template>
+
+
+<style>
+.section-container {
+  text-align: center;
+}
+</style>

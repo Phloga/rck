@@ -1,5 +1,5 @@
 <script setup>
-import "/assets/recipeEditor.css";
+import "/assets/recipe-editor.css";
 
 
 import ItemSelector from "./ItemSelector.vue"
@@ -183,8 +183,7 @@ onMounted(() => {
     <header>    <h1><span class="block">Rezepte Editor</span></h1></header>
     <main>
     <Form @submit="saveRecipe">
-      <br>
-      <div class="block">
+      <div class="panel">
         <Field name="recipe-title" v-model="recipeName" :rules="validateTitle" class="title borderless-field" placeholder="Titel hier eingeben"/>
         <ErrorMessage as="div" name='recipe-title' class="note error"/>
       </div><br>
@@ -202,7 +201,7 @@ onMounted(() => {
       </p>
 
       <table class="item-table">
-        <tr v-for="listing,i in ingredients" :key="i">
+        <tr class="card" v-for="listing,i in ingredients" :key="i">
           <td class="row-label">{{listing.itemName}}</td>
           <td>
             <Field :id='"amount-"+i' :name='"amount-"+i' type='number' :rules='validateAmount' v-model='listing.amount' class='borderless-field'/>
@@ -220,8 +219,14 @@ onMounted(() => {
     </Form>
     <hr class="divider">
     <h2><span class="block">Beschreibung</span></h2>
-    <div class="section-container">
+    <div class="section-container panel">
         <div class="editor" id="editorjs"></div>
     </div>
     </main>
 </template>
+
+<style>
+.section-container {
+  text-align: center;
+}
+</style>
